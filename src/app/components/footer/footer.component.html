@@ -1,0 +1,85 @@
+<!-- src/app/components/footer/footer.component.html -->
+<footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section about">
+          <h2>StudyHelper</h2>
+          <p>Your trusted partner for academic excellence. We provide expert tutoring services across a wide range of subjects to help students achieve their full potential.</p>
+          <div class="contact">
+            <div class="contact-item">
+              <span class="icon">📍</span>
+              <p>123 Learning Avenue, Education City, CA 90210</p>
+            </div>
+            <div class="contact-item">
+              <span class="icon">📱</span>
+              <p>+1 (555) 123-4567</p>
+            </div>
+            <div class="contact-item">
+              <span class="icon">✉️</span>
+              <p>infostudyhelper.com</p>
+            </div>
+          </div>
+          <div class="socials">
+            <a href="#" class="social-link" aria-label="Facebook">
+              <span class="icon">🌐</span>
+            </a>
+            <a href="#" class="social-link" aria-label="Twitter">
+              <span class="icon">📘</span>
+            </a>
+            <a href="#" class="social-link" aria-label="Instagram">
+              <span class="icon">🐦</span>
+            </a>
+            <a href="#" class="social-link" aria-label="LinkedIn">
+              <span class="icon">📸</span>
+            </a>
+          </div>
+        </div>
+  
+        <div class="footer-section links">
+          <h2>Quick Links</h2>
+          <ul>
+            <li><a routerLink="/">Home</a></li>
+            <li><a routerLink="/about">About Us</a></li>
+            <li><a routerLink="/services">Our Services</a></li>
+            <li><a routerLink="/tutors">Meet Our Tutors</a></li>
+            <li><a routerLink="/pricing">Pricing Plans</a></li>
+            <li><a routerLink="/contact">Contact Us</a></li>
+          </ul>
+        </div>
+  
+        <div class="footer-section subjects">
+          <h2>Subjects</h2>
+          <ul>
+            <li><a routerLink="/subjects/mathematics">Mathematics</a></li>
+            <li><a routerLink="/subjects/science">Science</a></li>
+            <li><a routerLink="/subjects/english">English & Literature</a></li>
+            <li><a routerLink="/subjects/history">History & Social Studies</a></li>
+            <li><a routerLink="/subjects/languages">Foreign Languages</a></li>
+            <li><a routerLink="/subjects/programming">Computer Science</a></li>
+          </ul>
+        </div>
+  
+        <div class="footer-section newsletter">
+          <h2>Subscribe</h2>
+          <p>Stay updated with our latest news, special offers, and educational resources.</p>
+          <div class="newsletter-form">
+            <input type="email" placeholder="Your email address">
+            <button type="submit">Subscribe</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <div class="container">
+        <div class="footer-bottom-content">
+          <p>&copy; {{ currentYear }} StudyHelper. All Rights Reserved.</p>
+          <div class="footer-links">
+            <a routerLink="/privacy">Privacy Policy</a>
+            <a routerLink="/terms">Terms of Service</a>
+            <a routerLink="/faq">FAQ</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>

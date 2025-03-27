@@ -1,0 +1,302 @@
+<!-- src/app/pages/home/home.component.html -->
+<main>
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="container">
+        <div class="hero-content">
+          <span class="overline">Premier Tutoring Services</span>
+          <h1>Achieve Academic Excellence with Expert Guidance</h1>
+          <p>Personalized one-on-one tutoring to help you reach your full potential. Our experienced tutors provide tailored support for students of all ages and academic levels.</p>
+          <div class="hero-buttons">
+            <a routerLink="/book" class="btn btn-primary">Book Your First Session</a>
+            <a routerLink="/services" class="btn btn-secondary">Explore Our Services</a>
+          </div>
+          <div class="hero-metrics">
+            <div class="metric">
+              <span class="metric-value">1000+</span>
+              <span class="metric-label">Happy Students</span>
+            </div>
+            <div class="metric">
+              <span class="metric-value">95%</span>
+              <span class="metric-label">Success Rate</span>
+            </div>
+            <div class="metric">
+              <span class="metric-value">50+</span>
+              <span class="metric-label">Expert Tutors</span>
+            </div>
+          </div>
+        </div>
+        <div class="hero-image">
+          <div class="hero-image-container">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="image-placeholder">
+              <!-- Placeholder for an actual image -->
+              <div class="image-content">
+                <span class="emoji">🎓</span>
+              </div>
+            </div>
+            <div class="floating-card card-1">
+              <div class="card-icon">📈</div>
+              <div class="card-content">
+                <span class="card-label">Average Grade Improvement</span>
+                <span class="card-value">+25%</span>
+              </div>
+            </div>
+            <div class="floating-card card-2">
+              <div class="card-icon">⭐</div>
+              <div class="card-content">
+                <span class="card-label">Student Satisfaction</span>
+                <span class="card-value">4.9/5</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-wave">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+          <path fill="#ffffff" fill-opacity="1" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,165.3C1248,171,1344,149,1392,138.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+        </svg>
+      </div>
+    </section>
+  
+    <!-- Features Section -->
+    <section class="features-section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-overline">Why Choose StudyHelper</span>
+          <h2>The Perfect Learning Experience</h2>
+          <p>We combine the best tutors, personalized learning plans, and a supportive environment to ensure academic success.</p>
+        </div>
+        
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">👨‍🏫</div>
+            <h3>Expert Tutors</h3>
+            <p>All our tutors are highly qualified professionals with extensive experience in their fields.</p>
+          </div>
+          
+          <div class="feature-card">
+            <div class="feature-icon">📝</div>
+            <h3>Personalized Plans</h3>
+            <p>We create custom learning plans tailored to your specific goals and learning style.</p>
+          </div>
+          
+          <div class="feature-card">
+            <div class="feature-icon">🔄</div>
+            <h3>Regular Progress Reports</h3>
+            <p>Track improvements with detailed progress reports and performance analytics.</p>
+          </div>
+          
+          <div class="feature-card">
+            <div class="feature-icon">💻</div>
+            <h3>Online & In-Person</h3>
+            <p>Choose between convenient online sessions or traditional in-person tutoring.</p>
+          </div>
+          
+          <div class="feature-card">
+            <div class="feature-icon">📆</div>
+            <h3>Flexible Scheduling</h3>
+            <p>Book sessions at times that work for you, including evenings and weekends.</p>
+          </div>
+          
+          <div class="feature-card">
+            <div class="feature-icon">💰</div>
+            <h3>Affordable Pricing</h3>
+            <p>Quality education at competitive rates with various package options.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  
+    <!-- Subjects Section -->
+    <section class="subjects-section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-overline">Our Expertise</span>
+          <h2>Subjects We Cover</h2>
+          <p>From mathematics to languages, we offer expert tutoring across a wide range of academic disciplines.</p>
+        </div>
+        
+        <div class="subjects-grid">
+          <div class="subject-card" *ngFor="let subject of subjects">
+            <div class="subject-icon">{{ subject.icon }}</div>
+            <h3>{{ subject.name }}</h3>
+            <p>{{ subject.description }}</p>
+            <a routerLink="/subjects/{{ subject.name.toLowerCase() }}" class="subject-link">Learn More</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  
+    <!-- How It Works Section -->
+    <section class="how-it-works-section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-overline">Simple Process</span>
+          <h2>How Our Tutoring Works</h2>
+          <p>Getting started with StudyHelper is easy. Just follow these simple steps to begin your journey to academic success.</p>
+        </div>
+        
+        <div class="steps-container">
+          <div class="step-line"></div>
+          
+          <div class="step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <h3>Book a Free Consultation</h3>
+              <p>Schedule a free 15-minute consultation to discuss your goals and needs with our education coordinators.</p>
+            </div>
+          </div>
+          
+          <div class="step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <h3>Get Matched with the Perfect Tutor</h3>
+              <p>We'll pair you with a tutor whose expertise and teaching style matches your learning needs.</p>
+            </div>
+          </div>
+          
+          <div class="step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <h3>Receive a Personalized Learning Plan</h3>
+              <p>Your tutor will create a custom plan targeting your specific goals and addressing areas for improvement.</p>
+            </div>
+          </div>
+          
+          <div class="step">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <h3>Start Regular Sessions</h3>
+              <p>Begin your tutoring sessions online or in-person and track your progress as you improve.</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="cta-button-container">
+          <a routerLink="/book" class="btn btn-primary">Get Started Today</a>
+        </div>
+      </div>
+    </section>
+  
+    <!-- Testimonials Section -->
+    <section class="testimonials-section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-overline">Success Stories</span>
+          <h2>What Our Students Say</h2>
+          <p>Join hundreds of satisfied students who have achieved academic excellence with StudyHelper.</p>
+        </div>
+        
+        <div class="testimonial-slider">
+          <div class="testimonial-wrapper">
+            <div class="testimonial-cards">
+              <div class="testimonial-card" *ngFor="let testimonial of testimonials">
+                <div class="testimonial-rating">
+                  <span class="star">★</span>
+                  <span class="star">★</span>
+                  <span class="star">★</span>
+                  <span class="star">★</span>
+                  <span class="star">★</span>
+                </div>
+                <p class="testimonial-text">"{{ testimonial.quote }}"</p>
+                <div class="testimonial-author">
+                  <div class="author-image">
+                    <div class="avatar-placeholder">{{ testimonial.name[0] }}</div>
+                  </div>
+                  <div class="author-info">
+                    <h4>{{ testimonial.name }}</h4>
+                    <p>{{ testimonial.role }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="slider-controls">
+            <button class="slider-arrow slider-prev" aria-label="Previous testimonial">
+              ◀
+            </button>
+            <div class="slider-dots">
+              <span class="dot active"></span>
+              <span class="dot"></span>
+              <span class="dot"></span>
+            </div>
+            <button class="slider-arrow slider-next" aria-label="Next testimonial">
+              ▶
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  
+    <!-- FAQ Section -->
+    <section class="faq-section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-overline">Common Questions</span>
+          <h2>Frequently Asked Questions</h2>
+          <p>Find answers to commonly asked questions about our tutoring services.</p>
+        </div>
+        
+        <div class="faq-container">
+          <div class="faq-item">
+            <div class="faq-question">
+              <h3>How much does tutoring cost?</h3>
+              <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+              <p>Our tutoring rates vary depending on the subject, level, and tutor expertise. We offer packages starting from $40/hour with discounts available for package bookings. Contact us for a personalized quote.</p>
+            </div>
+          </div>
+          
+          <div class="faq-item">
+            <div class="faq-question">
+              <h3>How are your tutors selected?</h3>
+              <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+              <p>All our tutors go through a rigorous selection process including background checks, credential verification, subject knowledge tests, and teaching demonstration. We only hire the top 10% of applicants.</p>
+            </div>
+          </div>
+          
+          <div class="faq-item">
+            <div class="faq-question">
+              <h3>Can I change my tutor if it's not a good fit?</h3>
+              <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+              <p>Absolutely! We want you to have the perfect learning experience. If you're not satisfied with your tutor, we'll match you with a different one at no extra cost.</p>
+            </div>
+          </div>
+          
+          <div class="faq-item">
+            <div class="faq-question">
+              <h3>How long are the tutoring sessions?</h3>
+              <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+              <p>Our standard sessions are 60 minutes, but we offer flexibility with 30-minute and 90-minute options as well, depending on the student's needs and attention span.</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="faq-cta">
+          <p>Still have questions? Contact our team for more information.</p>
+          <a routerLink="/contact" class="btn btn-secondary">Contact Us</a>
+        </div>
+      </div>
+    </section>
+  
+    <!-- CTA Section -->
+    <section class="cta-section">
+      <div class="container">
+        <div class="cta-content">
+          <h2>Ready to Transform Your Academic Journey?</h2>
+          <p>Join thousands of students who have achieved their goals with StudyHelper's personalized tutoring.</p>
+          <a routerLink="/book" class="btn btn-light btn-lg">Book Your Free Consultation</a>
+        </div>
+        <div class="cta-pattern"></div>
+      </div>
+    </section>
+  </main>
