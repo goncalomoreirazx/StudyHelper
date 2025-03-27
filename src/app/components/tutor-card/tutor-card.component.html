@@ -1,0 +1,47 @@
+<!-- src/app/components/tutor-card/tutor-card.component.html -->
+<div class="tutor-card">
+    <div class="tutor-header">
+      <div class="tutor-avatar">
+        <span class="tutor-initials">{{ tutorInitials }}</span>
+      </div>
+      <div class="tutor-rating">
+        <span *ngFor="let star of filledStars" class="star filled">★</span>
+        <span *ngIf="hasHalfStar" class="star half">★</span>
+        <span *ngFor="let star of emptyStars" class="star empty">★</span>
+        <span class="rating-value">{{ tutor.rating.toFixed(1) }}</span>
+      </div>
+    </div>
+    
+    <div class="tutor-info">
+      <h3 class="tutor-name">{{ tutor.name }}</h3>
+      <div class="tutor-profession">{{ tutor.profession }}</div>
+      <div class="tutor-experience">{{ tutor.experience }} years of teaching experience</div>
+      
+      <div class="tutor-bio" [class.expanded]="showFullBio">
+        <p>{{ tutor.bio }}</p>
+      </div>
+      
+      <button class="bio-toggle" (click)="toggleBio()">
+        {{ showFullBio ? 'Show Less' : 'Read More' }}
+      </button>
+      
+      <div class="tutor-subjects">
+        <h4>Subjects</h4>
+        <div class="subject-tags">
+          <span *ngFor="let subject of tutor.subjects" class="subject-tag">{{ subject }}</span>
+        </div>
+      </div>
+      
+      <div class="tutor-hobbies">
+        <h4>Hobbies & Interests</h4>
+        <div class="hobby-tags">
+          <span *ngFor="let hobby of tutor.hobbies" class="hobby-tag">{{ hobby }}</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="tutor-footer">
+      <a routerLink="/book" class="btn btn-primary book-btn">Book Session</a>
+      <a routerLink="/tutors/{{ tutor.id }}" class="btn btn-secondary profile-btn">View Profile</a>
+    </div>
+  </div>
