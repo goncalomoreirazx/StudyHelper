@@ -101,8 +101,10 @@
     display: flex;
     flex-wrap: wrap;
     gap: var(--spacing-sm);
+    justify-content: center;
   }
   
+  /* Style filter buttons as links */
   .filter-btn {
     padding: 0.5rem 1rem;
     background-color: var(--neutral-100);
@@ -112,6 +114,9 @@
     font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
   }
   
   .filter-btn:hover {
@@ -178,82 +183,88 @@
     gap: var(--spacing-lg);
   }
   
-  /* Pagination */
+  /* Pagination with router links */
   .pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: var(--spacing-md);
     margin-top: var(--spacing-2xl);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
   
-  .pagination-btn {
+  .pagination-status {
+    margin-bottom: var(--spacing-md);
+    color: var(--neutral-600);
+    font-size: 0.875rem;
+  }
+  
+  .pagination-controls {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    justify-content: center;
+    gap: var(--spacing-md);
+  }
+  
+  /* Style pagination buttons as links */
+  .pagination-btn {
     padding: 0.625rem 1.25rem;
-    border: 1px solid var(--neutral-300);
-    border-radius: var(--radius-md);
     background-color: white;
-    color: var(--neutral-700);
+    border: 1px solid var(--primary-300);
+    border-radius: var(--radius-md);
+    color: var(--primary-700);
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.3s ease;
+    min-width: 100px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
   }
   
-  .pagination-btn:hover:not(:disabled) {
+  .pagination-btn:hover {
     background-color: var(--primary-50);
-    border-color: var(--primary-400);
-    color: var(--primary-700);
   }
   
-  .pagination-btn:disabled {
+  .pagination-btn.disabled {
     opacity: 0.5;
     cursor: not-allowed;
+    background-color: var(--neutral-100);
+    border-color: var(--neutral-300);
+    color: var(--neutral-500);
   }
   
   .page-numbers {
     display: flex;
-    gap: 0.25rem;
-    align-items: center;
+    gap: 8px;
   }
   
+  /* Style page number buttons as links */
   .page-number {
-    min-width: 40px;
+    width: 40px;
     height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: var(--radius-md);
-    border: 1px solid var(--neutral-200);
     background-color: white;
+    border: 1px solid var(--neutral-300);
     color: var(--neutral-700);
     cursor: pointer;
-    transition: all 0.3s ease;
+    font-weight: 500;
+    text-decoration: none;
   }
   
   .page-number:hover:not(.active) {
     background-color: var(--primary-50);
-    border-color: var(--primary-300);
+    border-color: var(--primary-400);
   }
   
   .page-number.active {
     background-color: var(--primary-600);
-    border-color: var(--primary-600);
     color: white;
-    font-weight: 600;
+    border-color: var(--primary-600);
+    cursor: default;
   }
   
-  .page-ellipsis {
-    min-width: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--neutral-500);
-    font-weight: bold;
-  }
-  
-  /* CTA Section - Copied from home component */
+  /* CTA Section */
   .cta-section {
     background: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-800) 100%);
     color: white;
@@ -305,10 +316,6 @@
     .tutors-grid {
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     }
-    
-    .filters {
-      gap: var(--spacing-md);
-    }
   }
   
   @media (max-width: 768px) {
@@ -324,18 +331,9 @@
       grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     }
     
-    .filter-buttons {
+    .pagination-controls {
+      flex-wrap: wrap;
       justify-content: center;
-    }
-    
-    .pagination {
-      flex-direction: column;
-      gap: var(--spacing-sm);
-    }
-    
-    .page-numbers {
-      order: -1;
-      margin-bottom: var(--spacing-sm);
     }
   }
   
@@ -348,8 +346,14 @@
       grid-template-columns: 1fr;
     }
     
+    .pagination-controls {
+      flex-direction: column;
+      gap: var(--spacing-sm);
+    }
+    
     .page-numbers {
-      display: flex;
+      order: 2;
+      margin: var(--spacing-sm) 0;
       flex-wrap: wrap;
       justify-content: center;
     }

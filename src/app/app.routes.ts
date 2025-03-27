@@ -12,8 +12,21 @@ export const routes: Routes = [
         component: TutorsComponent
     },
     {
+        // Add route with parameters for page and subject
+        path: 'tutors/page/:page',
+        component: TutorsComponent
+    },
+    {
+        path: 'tutors/subject/:subject',
+        component: TutorsComponent
+    },
+    {
+        path: 'tutors/subject/:subject/page/:page',
+        component: TutorsComponent
+    },
+    {
         path: 'tutors/:id',
-        component: TutorsComponent // You can create a TutorDetailComponent for individual tutor profiles
+        component: TutorsComponent // Change this to a detail component later if needed
     },
     {
         path: '**',

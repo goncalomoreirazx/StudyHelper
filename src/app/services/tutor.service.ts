@@ -226,6 +226,8 @@ export class TutorService {
    * @param subject Optional subject filter
    */
   getTutorsPaginated(page: number, pageSize: number, subject?: string | null): Observable<{tutors: Tutor[], total: number}> {
+    console.log(`Service - Getting page ${page}, size ${pageSize}, subject: ${subject || 'All'}`);
+    
     // First filter by subject if provided
     let filteredTutors = this.tutors;
     if (subject) {
@@ -234,9 +236,17 @@ export class TutorService {
       );
     }
     
+    // Ensure valid page number
+    const totalPages = Math.ceil(filteredTutors.length / pageSize);
+    if (page >= totalPages) {
+      page = Math.max(0, totalPages - 1);
+    }
+    
     // Then paginate the filtered results
     const startIndex = page * pageSize;
     const paginatedTutors = filteredTutors.slice(startIndex, startIndex + pageSize);
+    
+    console.log(`Service - Returning ${paginatedTutors.length} tutors, total: ${filteredTutors.length}`);
     
     return of({
       tutors: paginatedTutors,

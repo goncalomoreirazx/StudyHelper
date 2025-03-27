@@ -1,11 +1,12 @@
 <!-- src/app/pages/tutors/tutors.component.html -->
 <main class="tutors-page">
+    <!-- Hero Section -->
     <section class="tutors-hero">
       <div class="container">
         <div class="hero-content">
           <span class="overline">Expert Guidance</span>
           <h1>Meet Our Talented Tutors</h1>
-          <p>Our tutors are carefully selected for their academic excellence, teaching experience, and passion for education. Each tutor undergoes rigorous training to ensure they can provide the highest quality of instruction.</p>
+          <p>Our tutors are carefully selected for their academic excellence, teaching experience, and passion for education.</p>
         </div>
       </div>
       <div class="hero-wave">
@@ -15,6 +16,7 @@
       </div>
     </section>
   
+    <!-- Filters Section -->
     <section class="tutors-filter-section">
       <div class="container">
         <div class="filters-container">
@@ -23,19 +25,21 @@
             <div class="filter-group">
               <label>Filter by Subject:</label>
               <div class="filter-buttons">
-                <button 
+                <!-- Using router links instead of click events -->
+                <a 
+                  routerLink="/tutors"
                   class="filter-btn" 
-                  [class.active]="selectedSubject === null" 
-                  (click)="filterBySubject(null)">
+                  [class.active]="selectedSubject === null">
                   All Subjects
-                </button>
-                <button 
-                  *ngFor="let subject of subjects" 
+                </a>
+                
+                <a 
+                  *ngFor="let subject of subjects"
+                  [routerLink]="['/tutors/subject', subject]"
                   class="filter-btn" 
-                  [class.active]="selectedSubject === subject" 
-                  (click)="filterBySubject(subject)">
+                  [class.active]="selectedSubject === subject">
                   {{ subject }}
-                </button>
+                </a>
               </div>
             </div>
           </div>
@@ -43,6 +47,7 @@
       </div>
     </section>
   
+    <!-- Tutors List Section -->
     <section class="tutors-list-section">
       <div class="container">
         <div *ngIf="loading" class="loading-container">
@@ -62,65 +67,58 @@
           </app-tutor-card>
         </div>
   
+        <!-- Pagination using router links -->
         <div *ngIf="!loading && totalPages > 1" class="pagination">
-          <button 
-            class="pagination-btn prev" 
-            [disabled]="currentPage === 0"
-            (click)="prevPage()">
-            <span>◀</span> Previous
-          </button>
-          
-          <div class="page-numbers">
-            <!-- First page button -->
-            <button 
-              *ngIf="totalPages > 5 && currentPage > 2" 
-              class="page-number"
-              (click)="goToPage(0)">
-              1
-            </button>
-            
-            <!-- Ellipsis for skipped pages -->
-            <span *ngIf="totalPages > 5 && currentPage > 2" class="page-ellipsis">...</span>
-            
-            <!-- Page number buttons with smart rendering -->
-            <ng-container *ngFor="let page of getPageNumbers()">
-              <!-- Only show current page and 1 page before/after for mobile -->
-              <button 
-                *ngIf="totalPages <= 5 || (page >= currentPage - 1 && page <= currentPage + 1) || page === 0 || page === totalPages - 1" 
-                class="page-number" 
-                [class.active]="page === currentPage"
-                (click)="goToPage(page)">
-                {{ page + 1 }}
-              </button>
-            </ng-container>
-            
-            <!-- Ellipsis for skipped pages -->
-            <span *ngIf="totalPages > 5 && currentPage < totalPages - 3" class="page-ellipsis">...</span>
-            
-            <!-- Last page button -->
-            <button 
-              *ngIf="totalPages > 5 && currentPage < totalPages - 3" 
-              class="page-number"
-              (click)="goToPage(totalPages - 1)">
-              {{ totalPages }}
-            </button>
+          <div class="pagination-status">
+            Showing page {{ currentPage + 1 }} of {{ totalPages }} ({{ totalTutors }} tutors)
           </div>
           
-          <button 
-            class="pagination-btn next" 
-            [disabled]="currentPage >= totalPages - 1"
-            (click)="nextPage()">
-            Next <span>▶</span>
-          </button>
+          <div class="pagination-controls">
+            <!-- Previous button -->
+            <a
+              *ngIf="currentPage > 0"
+              class="pagination-btn"
+              [routerLink]="selectedSubject ? 
+                ['/tutors/subject', selectedSubject, 'page', currentPage] : 
+                ['/tutors/page', currentPage]">
+              Previous
+            </a>
+            <span *ngIf="currentPage === 0" class="pagination-btn disabled">Previous</span>
+            
+            <!-- Page number buttons -->
+            <div class="page-numbers">
+              <a 
+                *ngFor="let page of pageArray; let i = index"
+                class="page-number" 
+                [class.active]="currentPage === i"
+                [routerLink]="selectedSubject ? 
+                  ['/tutors/subject', selectedSubject, 'page', i + 1] : 
+                  ['/tutors/page', i + 1]">
+                {{ i + 1 }}
+              </a>
+            </div>
+            
+            <!-- Next button -->
+            <a
+              *ngIf="currentPage < totalPages - 1"
+              class="pagination-btn"
+              [routerLink]="selectedSubject ? 
+                ['/tutors/subject', selectedSubject, 'page', currentPage + 2] : 
+                ['/tutors/page', currentPage + 2]">
+              Next
+            </a>
+            <span *ngIf="currentPage >= totalPages - 1" class="pagination-btn disabled">Next</span>
+          </div>
         </div>
       </div>
     </section>
   
+    <!-- CTA Section -->
     <section class="cta-section">
       <div class="container">
         <div class="cta-content">
           <h2>Ready to Learn with Our Tutors?</h2>
-          <p>Book your first session today and start your journey to academic success with the perfect tutor for your needs.</p>
+          <p>Book your first session today and start your journey to academic success.</p>
           <a routerLink="/book" class="btn btn-light btn-lg">Book a Session Now</a>
         </div>
         <div class="cta-pattern"></div>
