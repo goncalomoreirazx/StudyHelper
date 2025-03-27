@@ -1,7 +1,7 @@
 // src/app/pages/home/home.component.ts
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, inject, PLATFORM_ID } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-home',
@@ -11,6 +11,8 @@ import { CommonModule } from '@angular/common';
   styleUrl: './home.component.css'
 })
 export class HomeComponent implements AfterViewInit {
+  private platformId = inject(PLATFORM_ID);
+  
   testimonials = [
     {
       id: 1,
@@ -69,7 +71,9 @@ export class HomeComponent implements AfterViewInit {
   ];
 
   ngAfterViewInit() {
-    this.initFaqToggle();
+    if (isPlatformBrowser(this.platformId)) {
+      this.initFaqToggle();
+    }
   }
 
   initFaqToggle() {
