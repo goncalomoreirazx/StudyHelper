@@ -1,4 +1,4 @@
-<!-- Modified navbar to add tutors link -->
+<!-- Modified navbar to ensure consistent structure -->
 <nav class="navbar" [class.scrolled]="scrolled">
     <div class="container">
       <div class="logo">
@@ -16,14 +16,16 @@
       
       <div class="menu-backdrop" [class.active]="isMenuOpen" (click)="closeMenu()"></div>
       
-      <ul class="nav-links" [class.active]="isMenuOpen">
-        <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMenu()">Home</a></li>
-        <li><a routerLink="/about" routerLinkActive="active" (click)="closeMenu()">About</a></li>
-        <li><a routerLink="/services" routerLinkActive="active" (click)="closeMenu()">Services</a></li>
-        <li><a routerLink="/tutors" routerLinkActive="active" (click)="closeMenu()">Our Tutors</a></li>
-        <li><a routerLink="/pricing" routerLinkActive="active" (click)="closeMenu()">Pricing</a></li>
-        <li><a routerLink="/contact" routerLinkActive="active" (click)="closeMenu()">Contact</a></li>
-        <li class="cta-btn"><a routerLink="/book" (click)="closeMenu()">Book a Session</a></li>
-      </ul>
+      <div class="navigation-container">
+        <ul class="nav-links" [class.active]="isMenuOpen">
+          <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMenu()">Home</a></li>
+          <li><a routerLink="/about" routerLinkActive="active" (click)="closeMenu()">About</a></li>
+          <li><a routerLink="/services" routerLinkActive="active" (click)="closeMenu()">Services</a></li>
+          <li><a routerLink="/tutors" routerLinkActive="active" (click)="closeMenu()">Our Tutors</a></li>
+          <li><a routerLink="/pricing" routerLinkActive="active" (click)="closeMenu()">Pricing</a></li>
+          <li><a routerLink="/contact" routerLinkActive="active" (click)="closeMenu()">Contact</a></li>
+          <li class="cta-btn"><a routerLink="/book" (click)="closeMenu()">Book a Session</a></li>
+        </ul>
+      </div>
     </div>
   </nav>

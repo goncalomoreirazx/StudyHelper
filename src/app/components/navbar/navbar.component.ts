@@ -8,7 +8,8 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
   standalone: true,
   imports: [RouterModule, CommonModule],
   templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.css'
+  styleUrl: './navbar.component.css',
+  host: { ngSkipHydration: 'true' }
 })
 export class NavbarComponent implements OnInit {
   isMenuOpen = false;

@@ -20,6 +20,7 @@
     justify-content: space-between;
     align-items: center;
     height: 100%;
+    position: relative;
   }
   
   .logo {
@@ -49,6 +50,11 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+  }
+  
+  .navigation-container {
+    display: flex;
+    align-items: center;
   }
   
   .nav-links {
@@ -182,6 +188,10 @@
     
     .menu-backdrop.active {
       display: block;
+    }
+    
+    .navigation-container {
+      position: static;
     }
     
     .nav-links {

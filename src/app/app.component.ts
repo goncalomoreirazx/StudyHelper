@@ -8,7 +8,8 @@ import { HomeComponent } from './pages/home/home.component';
   selector: 'app-root',
   imports: [RouterOutlet, NavbarComponent, FooterComponent],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.css',
+  host: { ngSkipHydration: 'true' }
 })
 export class AppComponent {
   title = 'StudyHelper';
