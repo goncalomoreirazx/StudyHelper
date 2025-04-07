@@ -5,7 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using ServerAPI.Data;
 using ServerAPI.Services;
-
+using Pomelo.EntityFrameworkCore.MySql.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,9 +14,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
 // Add Entity Framework and SQL Server
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
+builder.Services.AddDbContext<ApplicationDbContext>(options => 
+{
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+});
 // Add AutoMapper
 builder.Services.AddAutoMapper(typeof(Program));
 

@@ -1,0 +1,8 @@
+E:\Freelance\Angular\StudyHelper\ServerAPI\obj\Debug\net9.0\ServerAPI.csproj.AssemblyReference.cache
+E:\Freelance\Angular\StudyHelper\ServerAPI\obj\Debug\net9.0\ServerAPI.GeneratedMSBuildEditorConfig.editorconfig
+E:\Freelance\Angular\StudyHelper\ServerAPI\obj\Debug\net9.0\ServerAPI.AssemblyInfoInputs.cache
+E:\Freelance\Angular\StudyHelper\ServerAPI\obj\Debug\net9.0\ServerAPI.AssemblyInfo.cs
+E:\Freelance\Angular\StudyHelper\ServerAPI\obj\Debug\net9.0\ServerAPI.csproj.CoreCompileInputs.cache
+E:\Freelance\Angular\StudyHelper\ServerAPI\obj\Debug\net9.0\ServerAPI.MvcApplicationPartsAssemblyInfo.cs
+E:\Freelance\Angular\StudyHelper\ServerAPI\obj\Debug\net9.0\ServerAPI.MvcApplicationPartsAssemblyInfo.cache
+E:\Freelance\Angular\StudyHelper\ServerAPI\obj\Debug\net9.0\ServerAPI.sourcelink.json
