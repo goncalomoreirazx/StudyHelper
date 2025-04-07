@@ -108,19 +108,19 @@
               <div class="password-requirements">
                 <p class="requirement-title">Password requirements:</p>
                 <ul>
-                  <li [class.met]="password?.value?.length >= 8">
+                  <li [class.met]="hasMinimumLength()">
                     At least 8 characters
                   </li>
-                  <li [class.met]="password?.value?.match(/[A-Z]/)">
+                  <li [class.met]="hasUppercaseLetter()">
                     One uppercase letter
                   </li>
-                  <li [class.met]="password?.value?.match(/[a-z]/)">
+                  <li [class.met]="hasLowercaseLetter()">
                     One lowercase letter
                   </li>
-                  <li [class.met]="password?.value?.match(/[0-9]/)">
+                  <li [class.met]="hasNumber()">
                     One number
                   </li>
-                  <li [class.met]="password?.value?.match(/[@$!%*?&]/)">
+                  <li [class.met]="hasSpecialCharacter()">
                     One special character
                   </li>
                 </ul>

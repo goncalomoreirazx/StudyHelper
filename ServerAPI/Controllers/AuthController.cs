@@ -62,7 +62,6 @@ namespace ServerAPI.Controllers
         [HttpPost("revoke-token")]
         public async Task<IActionResult> RevokeToken(TokenRefreshRequest request)
         {
-            // Accept token from request body or cookie
             var token = request.RefreshToken;
             
             if (string.IsNullOrEmpty(token))
@@ -82,7 +81,6 @@ namespace ServerAPI.Controllers
         {
             try
             {
-                // Get user ID from JWT token claims
                 var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
                 
                 if (string.IsNullOrEmpty(userId))

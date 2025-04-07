@@ -103,4 +103,25 @@ export class RegisterComponent {
       }
     });
   }
+
+  // Helper methods for password validation
+  hasMinimumLength(): boolean {
+    return (this.password?.value?.length || 0) >= 8;
+  }
+
+  hasUppercaseLetter(): boolean {
+    return /[A-Z]/.test(this.password?.value || '');
+  }
+
+  hasLowercaseLetter(): boolean {
+    return /[a-z]/.test(this.password?.value || '');
+  }
+
+  hasNumber(): boolean {
+    return /[0-9]/.test(this.password?.value || '');
+  }
+
+  hasSpecialCharacter(): boolean {
+    return /[@$!%*?&]/.test(this.password?.value || '');
+  }
 }

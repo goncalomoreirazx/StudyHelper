@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using ServerAPI.Data;
 using ServerAPI.Models;
+using BCrypt.Net;
 
 namespace ServerAPI.Services
 {
