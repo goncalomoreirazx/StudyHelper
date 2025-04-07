@@ -1,7 +1,10 @@
 // src/app/components/navbar/navbar.component.ts
 import { Component, HostListener, OnInit, inject, PLATFORM_ID } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Observable } from 'rxjs';
+import { AuthService } from '../../services/auth.service';
+import { User } from '../../models/user.model';
 
 @Component({
   selector: 'app-navbar',
@@ -13,11 +16,37 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 })
 export class NavbarComponent implements OnInit {
   isMenuOpen = false;
+  isUserDropdownOpen = false;
   scrolled = false;
+  isLoggedIn$: Observable<boolean>;
+  currentUser: User | null = null;
+  
   private platformId = inject(PLATFORM_ID);
+  
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {
+    this.isLoggedIn$ = this.authService.isLoggedIn$;
+  }
   
   ngOnInit() {
     this.checkScroll();
+    
+    // Subscribe to current user
+    this.authService.currentUser$.subscribe(user => {
+      this.currentUser = user;
+    });
+    
+    // Close dropdown when clicking outside
+    if (isPlatformBrowser(this.platformId)) {
+      document.addEventListener('click', (event) => {
+        const target = event.target as HTMLElement;
+        if (!target.closest('.user-menu') && this.isUserDropdownOpen) {
+          this.closeDropdown();
+        }
+      });
+    }
   }
 
   @HostListener('window:scroll')
@@ -47,5 +76,21 @@ export class NavbarComponent implements OnInit {
         document.body.style.overflow = '';
       }
     }
+  }
+  
+  toggleUserDropdown(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isUserDropdownOpen = !this.isUserDropdownOpen;
+  }
+  
+  closeDropdown() {
+    this.isUserDropdownOpen = false;
+  }
+  
+  logout() {
+    this.authService.logout();
+    this.closeDropdown();
+    this.router.navigate(['/']);
   }
 }

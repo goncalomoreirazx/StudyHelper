@@ -1,0 +1,228 @@
+<!-- src/app/pages/auth/register/register.component.html -->
+<main class="auth-page">
+    <section class="auth-container">
+      <div class="auth-card">
+        <div class="auth-header">
+          <h1>Create Your Account</h1>
+          <p>Join StudyHelper and start your learning journey</p>
+        </div>
+  
+        <!-- Error Message -->
+        <div *ngIf="errorMessage" class="error-message">
+          <span class="error-icon">!</span>
+          <p>{{ errorMessage }}</p>
+        </div>
+  
+        <!-- Registration Form -->
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="auth-form">
+          <!-- Name Fields -->
+          <div class="form-row">
+            <!-- First Name Field -->
+            <div class="form-group">
+              <label for="firstName">First Name</label>
+              <div class="input-wrapper">
+                <span class="input-icon">👤</span>
+                <input 
+                  type="text" 
+                  id="firstName" 
+                  formControlName="firstName" 
+                  placeholder="Your first name"
+                  [class.error]="firstName?.invalid && (firstName?.dirty || firstName?.touched)"
+                >
+              </div>
+              <div class="error-feedback" *ngIf="firstName?.invalid && (firstName?.dirty || firstName?.touched)">
+                <div *ngIf="firstName?.errors?.['required']">First name is required</div>
+                <div *ngIf="firstName?.errors?.['minlength']">First name must be at least 2 characters</div>
+              </div>
+            </div>
+  
+            <!-- Last Name Field -->
+            <div class="form-group">
+              <label for="lastName">Last Name</label>
+              <div class="input-wrapper">
+                <span class="input-icon">👤</span>
+                <input 
+                  type="text" 
+                  id="lastName" 
+                  formControlName="lastName" 
+                  placeholder="Your last name"
+                  [class.error]="lastName?.invalid && (lastName?.dirty || lastName?.touched)"
+                >
+              </div>
+              <div class="error-feedback" *ngIf="lastName?.invalid && (lastName?.dirty || lastName?.touched)">
+                <div *ngIf="lastName?.errors?.['required']">Last name is required</div>
+                <div *ngIf="lastName?.errors?.['minlength']">Last name must be at least 2 characters</div>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Email Field -->
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <div class="input-wrapper">
+              <span class="input-icon">✉️</span>
+              <input 
+                type="email" 
+                id="email" 
+                formControlName="email" 
+                placeholder="your.email@example.com"
+                [class.error]="email?.invalid && (email?.dirty || email?.touched)"
+              >
+            </div>
+            <div class="error-feedback" *ngIf="email?.invalid && (email?.dirty || email?.touched)">
+              <div *ngIf="email?.errors?.['required']">Email is required</div>
+              <div *ngIf="email?.errors?.['email']">Please enter a valid email address</div>
+            </div>
+          </div>
+  
+          <!-- Password Field -->
+          <div class="form-group">
+            <label for="password">Password</label>
+            <div class="input-wrapper">
+              <span class="input-icon">🔒</span>
+              <input 
+                [type]="showPassword ? 'text' : 'password'" 
+                id="password" 
+                formControlName="password" 
+                placeholder="Create a strong password"
+                [class.error]="password?.invalid && (password?.dirty || password?.touched)"
+              >
+              <button 
+                type="button" 
+                class="password-toggle" 
+                (click)="togglePasswordVisibility()"
+                [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+              >
+                {{ showPassword ? '👁️' : '👁️‍🗨️' }}
+              </button>
+            </div>
+            <div class="error-feedback" *ngIf="password?.invalid && (password?.dirty || password?.touched)">
+              <div *ngIf="password?.errors?.['required']">Password is required</div>
+              <div *ngIf="password?.errors?.['minlength']">Password must be at least 8 characters</div>
+              <div *ngIf="password?.errors?.['pattern']">
+                Password must contain at least one uppercase letter, one lowercase letter, 
+                one number, and one special character
+              </div>
+            </div>
+            <div class="password-strength" *ngIf="password?.value">
+              <div class="password-requirements">
+                <p class="requirement-title">Password requirements:</p>
+                <ul>
+                  <li [class.met]="password?.value?.length >= 8">
+                    At least 8 characters
+                  </li>
+                  <li [class.met]="password?.value?.match(/[A-Z]/)">
+                    One uppercase letter
+                  </li>
+                  <li [class.met]="password?.value?.match(/[a-z]/)">
+                    One lowercase letter
+                  </li>
+                  <li [class.met]="password?.value?.match(/[0-9]/)">
+                    One number
+                  </li>
+                  <li [class.met]="password?.value?.match(/[@$!%*?&]/)">
+                    One special character
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Confirm Password Field -->
+          <div class="form-group">
+            <label for="confirmPassword">Confirm Password</label>
+            <div class="input-wrapper">
+              <span class="input-icon">🔒</span>
+              <input 
+                [type]="showConfirmPassword ? 'text' : 'password'" 
+                id="confirmPassword" 
+                formControlName="confirmPassword" 
+                placeholder="Confirm your password"
+                [class.error]="(confirmPassword?.invalid || registerForm.hasError('mismatch')) && 
+                  (confirmPassword?.dirty || confirmPassword?.touched)"
+              >
+              <button 
+                type="button" 
+                class="password-toggle" 
+                (click)="toggleConfirmPasswordVisibility()"
+                [attr.aria-label]="showConfirmPassword ? 'Hide password' : 'Show password'"
+              >
+                {{ showConfirmPassword ? '👁️' : '👁️‍🗨️' }}
+              </button>
+            </div>
+            <div class="error-feedback" *ngIf="(confirmPassword?.invalid || registerForm.hasError('mismatch')) && 
+              (confirmPassword?.dirty || confirmPassword?.touched)">
+              <div *ngIf="confirmPassword?.errors?.['required']">Please confirm your password</div>
+              <div *ngIf="registerForm.hasError('mismatch')">Passwords do not match</div>
+            </div>
+          </div>
+  
+          <!-- Terms & Conditions -->
+          <div class="form-group">
+            <div class="terms-container">
+              <input type="checkbox" id="agreeTerms" formControlName="agreeTerms">
+              <label for="agreeTerms" class="terms-label">
+                I agree to the <a href="/terms" target="_blank">Terms of Service</a> and <a href="/privacy" target="_blank">Privacy Policy</a>
+              </label>
+            </div>
+            <div class="error-feedback" *ngIf="agreeTerms?.invalid && (agreeTerms?.dirty || agreeTerms?.touched)">
+              <div *ngIf="agreeTerms?.errors?.['required']">You must agree to the Terms of Service and Privacy Policy</div>
+            </div>
+          </div>
+  
+          <!-- Submit Button -->
+          <button 
+            type="submit" 
+            class="btn-submit" 
+            [disabled]="isSubmitting || registerForm.invalid"
+          >
+            <span *ngIf="isSubmitting" class="spinner"></span>
+            <span>{{ isSubmitting ? 'Creating account...' : 'Create Account' }}</span>
+          </button>
+        </form>
+  
+        <!-- Social Signup -->
+        <div class="social-login">
+          <div class="divider">
+            <span>or sign up with</span>
+          </div>
+          <div class="social-buttons">
+            <button type="button" class="social-btn google-btn">
+              <span class="social-icon">G</span>
+              <span>Google</span>
+            </button>
+            <button type="button" class="social-btn facebook-btn">
+              <span class="social-icon">f</span>
+              <span>Facebook</span>
+            </button>
+          </div>
+        </div>
+  
+        <div class="auth-footer">
+          <p>Already have an account? <a routerLink="/login">Sign in</a></p>
+        </div>
+      </div>
+  
+      <!-- Auth Graphic -->
+      <div class="auth-graphic">
+        <div class="graphic-content">
+          <h2>Join Our Learning Community</h2>
+          <p>Create an account to get personalized tutoring, track your progress, and achieve your academic goals.</p>
+          <div class="stats">
+            <div class="stat">
+              <span class="stat-value">20+</span>
+              <span class="stat-label">Subject Areas</span>
+            </div>
+            <div class="stat">
+              <span class="stat-value">4.9/5</span>
+              <span class="stat-label">Student Rating</span>
+            </div>
+            <div class="stat">
+              <span class="stat-value">24/7</span>
+              <span class="stat-label">Support</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>

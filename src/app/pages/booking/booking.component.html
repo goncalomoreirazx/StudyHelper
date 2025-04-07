@@ -1,0 +1,312 @@
+<!-- src/app/pages/booking/booking.component.html -->
+<main class="booking-page">
+    <div class="container">
+      <div class="page-header">
+        <h1>Book a Tutoring Session</h1>
+        <p>Schedule a session with one of our expert tutors</p>
+      </div>
+      
+      <!-- Booking Steps Indicator -->
+      <div class="steps-indicator">
+        <div class="step" [class.active]="currentStep >= 1" [class.completed]="currentStep > 1">
+          <div class="step-number">1</div>
+          <div class="step-label">Select Subject</div>
+        </div>
+        <div class="step-line" [class.active]="currentStep >= 2"></div>
+        <div class="step" [class.active]="currentStep >= 2" [class.completed]="currentStep > 2">
+          <div class="step-number">2</div>
+          <div class="step-label">Choose Tutor</div>
+        </div>
+        <div class="step-line" [class.active]="currentStep >= 3"></div>
+        <div class="step" [class.active]="currentStep >= 3">
+          <div class="step-number">3</div>
+          <div class="step-label">Schedule Session</div>
+        </div>
+      </div>
+      
+      <!-- Booking Form Container -->
+      <div class="booking-container">
+        <!-- Step 1: Select Subject -->
+        <div class="booking-step" *ngIf="isStepActive(1)">
+          <div class="step-header">
+            <h2>Select a Subject</h2>
+            <p>Choose the subject you need help with</p>
+          </div>
+          <div class="subject-grid">
+            <div class="subject-card">
+              <div class="subject-icon">📊</div>
+              <h3>Mathematics</h3>
+              <ul class="subject-topics">
+                <li>Algebra</li>
+                <li>Calculus</li>
+                <li>Geometry</li>
+                <li>Statistics</li>
+              </ul>
+              <button class="select-button">Select</button>
+            </div>
+            
+            <div class="subject-card">
+              <div class="subject-icon">🧪</div>
+              <h3>Science</h3>
+              <ul class="subject-topics">
+                <li>Physics</li>
+                <li>Chemistry</li>
+                <li>Biology</li>
+                <li>Environmental Science</li>
+              </ul>
+              <button class="select-button">Select</button>
+            </div>
+            
+            <div class="subject-card">
+              <div class="subject-icon">📝</div>
+              <h3>English</h3>
+              <ul class="subject-topics">
+                <li>Writing</li>
+                <li>Literature</li>
+                <li>Grammar</li>
+                <li>Composition</li>
+              </ul>
+              <button class="select-button">Select</button>
+            </div>
+            
+            <div class="subject-card">
+              <div class="subject-icon">🏛️</div>
+              <h3>History</h3>
+              <ul class="subject-topics">
+                <li>World History</li>
+                <li>American History</li>
+                <li>European History</li>
+                <li>Political Science</li>
+              </ul>
+              <button class="select-button">Select</button>
+            </div>
+            
+            <div class="subject-card">
+              <div class="subject-icon">🌍</div>
+              <h3>Languages</h3>
+              <ul class="subject-topics">
+                <li>Spanish</li>
+                <li>French</li>
+                <li>German</li>
+                <li>Chinese</li>
+              </ul>
+              <button class="select-button">Select</button>
+            </div>
+            
+            <div class="subject-card">
+              <div class="subject-icon">💻</div>
+              <h3>Computer Science</h3>
+              <ul class="subject-topics">
+                <li>Programming</li>
+                <li>Data Structures</li>
+                <li>Algorithms</li>
+                <li>Web Development</li>
+              </ul>
+              <button class="select-button">Select</button>
+            </div>
+          </div>
+          
+          <div class="step-actions">
+            <button class="btn-secondary" routerLink="/">Cancel</button>
+            <button class="btn-primary" (click)="nextStep()">Continue</button>
+          </div>
+        </div>
+        
+        <!-- Step 2: Choose Tutor -->
+        <div class="booking-step" *ngIf="isStepActive(2)">
+          <div class="step-header">
+            <h2>Choose a Tutor</h2>
+            <p>Select a tutor for your Mathematics session</p>
+          </div>
+          
+          <div class="tutors-filter">
+            <div class="search-box">
+              <input type="text" placeholder="Search tutors...">
+              <button class="search-button">🔍</button>
+            </div>
+            
+            <div class="filter-options">
+              <select>
+                <option value="">Sort by: Recommended</option>
+                <option value="rating">Highest Rated</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+                <option value="experience">Most Experienced</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="tutors-list">
+            <div class="tutor-card">
+              <div class="tutor-avatar">EP</div>
+              <div class="tutor-info">
+                <div class="tutor-header">
+                  <h3>Dr. Emily Parker</h3>
+                  <div class="tutor-rating">
+                    <span class="stars">★★★★★</span>
+                    <span class="rating-value">4.9</span>
+                  </div>
+                </div>
+                <p class="tutor-title">Mathematics Professor</p>
+                <p class="tutor-experience">15 years of teaching experience</p>
+                <p class="tutor-bio">With over 15 years of teaching experience at university level, Dr. Parker specializes in making complex math concepts accessible to students of all ages.</p>
+                <div class="tutor-tags">
+                  <span class="tag">Calculus</span>
+                  <span class="tag">Linear Algebra</span>
+                  <span class="tag">Statistics</span>
+                </div>
+              </div>
+              <div class="tutor-select">
+                <div class="tutor-rate">$60/hour</div>
+                <button class="select-button">Select</button>
+              </div>
+            </div>
+            
+            <div class="tutor-card">
+              <div class="tutor-avatar">RD</div>
+              <div class="tutor-info">
+                <div class="tutor-header">
+                  <h3>Robert Davis</h3>
+                  <div class="tutor-rating">
+                    <span class="stars">★★★★★</span>
+                    <span class="rating-value">4.8</span>
+                  </div>
+                </div>
+                <p class="tutor-title">Mathematics Teacher</p>
+                <p class="tutor-experience">8 years of teaching experience</p>
+                <p class="tutor-bio">Robert makes mathematics fun and accessible through hands-on examples and real-world applications. His students consistently achieve top scores on exams.</p>
+                <div class="tutor-tags">
+                  <span class="tag">Algebra</span>
+                  <span class="tag">Geometry</span>
+                  <span class="tag">Trigonometry</span>
+                </div>
+              </div>
+              <div class="tutor-select">
+                <div class="tutor-rate">$45/hour</div>
+                <button class="select-button">Select</button>
+              </div>
+            </div>
+          </div>
+          
+          <div class="step-actions">
+            <button class="btn-secondary" (click)="prevStep()">Back</button>
+            <button class="btn-primary" (click)="nextStep()">Continue</button>
+          </div>
+        </div>
+        
+        <!-- Step 3: Schedule Session -->
+        <div class="booking-step" *ngIf="isStepActive(3)">
+          <div class="step-header">
+            <h2>Schedule Your Session</h2>
+            <p>Choose a date and time for your session with Dr. Emily Parker</p>
+          </div>
+          
+          <div class="schedule-container">
+            <div class="calendar-container">
+              <div class="calendar-header">
+                <button class="calendar-nav">◀</button>
+                <h3>August 2025</h3>
+                <button class="calendar-nav">▶</button>
+              </div>
+              <div class="calendar-grid">
+                <div class="calendar-days">
+                  <span>Sun</span>
+                  <span>Mon</span>
+                  <span>Tue</span>
+                  <span>Wed</span>
+                  <span>Thu</span>
+                  <span>Fri</span>
+                  <span>Sat</span>
+                </div>
+                <div class="calendar-dates">
+                  <!-- Calendar placeholder, in real app would be generated dynamically -->
+                  <button class="date-button disabled">28</button>
+                  <button class="date-button disabled">29</button>
+                  <button class="date-button disabled">30</button>
+                  <button class="date-button disabled">31</button>
+                  <button class="date-button">1</button>
+                  <button class="date-button">2</button>
+                  <button class="date-button">3</button>
+                  <button class="date-button">4</button>
+                  <button class="date-button">5</button>
+                  <button class="date-button">6</button>
+                  <button class="date-button">7</button>
+                  <button class="date-button">8</button>
+                  <button class="date-button">9</button>
+                  <button class="date-button">10</button>
+                  <button class="date-button">11</button>
+                  <button class="date-button">12</button>
+                  <button class="date-button active">13</button>
+                  <button class="date-button">14</button>
+                  <button class="date-button">15</button>
+                  <button class="date-button">16</button>
+                  <button class="date-button">17</button>
+                  <button class="date-button">18</button>
+                  <button class="date-button">19</button>
+                  <button class="date-button">20</button>
+                  <button class="date-button">21</button>
+                  <button class="date-button">22</button>
+                  <button class="date-button">23</button>
+                  <button class="date-button">24</button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="time-slots">
+              <h3>Available Time Slots for August 13</h3>
+              <div class="slots-grid">
+                <button class="time-slot">9:00 AM</button>
+                <button class="time-slot">10:00 AM</button>
+                <button class="time-slot">11:00 AM</button>
+                <button class="time-slot active">1:00 PM</button>
+                <button class="time-slot">2:00 PM</button>
+                <button class="time-slot">3:00 PM</button>
+                <button class="time-slot">4:00 PM</button>
+                <button class="time-slot">5:00 PM</button>
+              </div>
+            </div>
+          </div>
+          
+          <div class="session-details">
+            <h3>Session Details</h3>
+            <div class="details-grid">
+              <div class="detail-item">
+                <span class="detail-label">Subject</span>
+                <span class="detail-value">Mathematics (Calculus)</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Tutor</span>
+                <span class="detail-value">Dr. Emily Parker</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Date</span>
+                <span class="detail-value">August 13, 2025</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Time</span>
+                <span class="detail-value">1:00 PM - 2:00 PM</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Duration</span>
+                <span class="detail-value">1 hour</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Price</span>
+                <span class="detail-value">$60.00</span>
+              </div>
+            </div>
+            
+            <div class="session-notes">
+              <label for="session-notes">Session Notes (Optional)</label>
+              <textarea id="session-notes" rows="3" placeholder="Add any specific topics or questions you'd like to cover in this session..."></textarea>
+            </div>
+          </div>
+          
+          <div class="step-actions">
+            <button class="btn-secondary" (click)="prevStep()">Back</button>
+            <button class="btn-primary">Confirm Booking</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>

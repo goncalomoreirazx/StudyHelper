@@ -1,0 +1,92 @@
+<!-- src/app/pages/my-sessions/my-sessions.component.html -->
+<main class="my-sessions-page">
+    <div class="container">
+      <div class="page-header">
+        <h1>My Sessions</h1>
+        <p>Manage your tutoring sessions and track your progress</p>
+      </div>
+      
+      <div class="sessions-tabs">
+        <button class="tab-button active">Upcoming Sessions</button>
+        <button class="tab-button">Past Sessions</button>
+      </div>
+      
+      <div class="sessions-container">
+        <!-- Upcoming Sessions Tab -->
+        <div class="tab-content active">
+          <div class="session-actions">
+            <button class="btn-primary">Book New Session</button>
+            <div class="search-box">
+              <input type="text" placeholder="Search sessions...">
+              <button class="search-button">🔍</button>
+            </div>
+          </div>
+          
+          <!-- Empty State -->
+          <div class="empty-state">
+            <div class="empty-icon">📅</div>
+            <h3>No Upcoming Sessions</h3>
+            <p>You don't have any upcoming tutoring sessions scheduled. Book your first session to get started!</p>
+            <a routerLink="/book" class="btn-primary">Book a Session</a>
+          </div>
+          
+          <!-- Session List (Hidden for now) -->
+          <div class="sessions-list" style="display: none;">
+            <!-- Session Card Template -->
+            <div class="session-card">
+              <div class="session-info">
+                <div class="session-date">
+                  <div class="date-box">
+                    <span class="month">Aug</span>
+                    <span class="day">15</span>
+                  </div>
+                  <span class="time">3:00 PM - 4:00 PM</span>
+                </div>
+                
+                <div class="session-details">
+                  <h3>Mathematics - Calculus Introduction</h3>
+                  <div class="session-meta">
+                    <span class="meta-item">
+                      <span class="meta-icon">👨‍🏫</span>
+                      <span>Dr. Emily Parker</span>
+                    </span>
+                    <span class="meta-item">
+                      <span class="meta-icon">💻</span>
+                      <span>Online Session</span>
+                    </span>
+                  </div>
+                  <p class="session-description">Introduction to limits, derivatives, and basic calculus concepts.</p>
+                </div>
+              </div>
+              
+              <div class="session-actions">
+                <button class="btn-secondary">Reschedule</button>
+                <button class="btn-secondary btn-outline">Cancel</button>
+                <button class="btn-primary">Join Session</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Past Sessions Tab (Hidden by default) -->
+        <div class="tab-content" style="display: none;">
+          <div class="session-actions">
+            <div class="filter-dropdown">
+              <button class="filter-button">Filter by Subject <span>▼</span></button>
+            </div>
+            <div class="search-box">
+              <input type="text" placeholder="Search past sessions...">
+              <button class="search-button">🔍</button>
+            </div>
+          </div>
+          
+          <!-- Empty State -->
+          <div class="empty-state">
+            <div class="empty-icon">📚</div>
+            <h3>No Past Sessions</h3>
+            <p>You haven't completed any tutoring sessions yet. Once you have attended sessions, they'll appear here.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>

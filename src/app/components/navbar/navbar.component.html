@@ -1,31 +1,51 @@
 <!-- Modified navbar to ensure consistent structure -->
 <nav class="navbar" [class.scrolled]="scrolled">
-    <div class="container">
-      <div class="logo">
-        <a routerLink="/">
-          <!-- You can replace this with an actual logo image -->
-          <h1>StudyHelper</h1>
-        </a>
-      </div>
-      
-      <div class="menu-toggle" (click)="toggleMenu()">
-        <div class="bar" [class.active]="isMenuOpen"></div>
-        <div class="bar" [class.active]="isMenuOpen"></div>
-        <div class="bar" [class.active]="isMenuOpen"></div>
-      </div>
-      
-      <div class="menu-backdrop" [class.active]="isMenuOpen" (click)="closeMenu()"></div>
-      
-      <div class="navigation-container">
-        <ul class="nav-links" [class.active]="isMenuOpen">
-          <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMenu()">Home</a></li>
-          <li><a routerLink="/about" routerLinkActive="active" (click)="closeMenu()">About</a></li>
-          <li><a routerLink="/services" routerLinkActive="active" (click)="closeMenu()">Services</a></li>
-          <li><a routerLink="/tutors" routerLinkActive="active" (click)="closeMenu()">Our Tutors</a></li>
-          <li><a routerLink="/pricing" routerLinkActive="active" (click)="closeMenu()">Pricing</a></li>
-          <li><a routerLink="/contact" routerLinkActive="active" (click)="closeMenu()">Contact</a></li>
-          <li class="cta-btn"><a routerLink="/book" (click)="closeMenu()">Book a Session</a></li>
-        </ul>
-      </div>
+  <div class="container">
+    <div class="logo">
+      <a routerLink="/">
+        <!-- You can replace this with an actual logo image -->
+        <h1>StudyHelper</h1>
+      </a>
     </div>
-  </nav>
+    
+    <div class="menu-toggle" (click)="toggleMenu()">
+      <div class="bar" [class.active]="isMenuOpen"></div>
+      <div class="bar" [class.active]="isMenuOpen"></div>
+      <div class="bar" [class.active]="isMenuOpen"></div>
+    </div>
+    
+    <div class="menu-backdrop" [class.active]="isMenuOpen" (click)="closeMenu()"></div>
+    
+    <div class="navigation-container">
+      <ul class="nav-links" [class.active]="isMenuOpen">
+        <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMenu()">Home</a></li>
+        <li><a routerLink="/about" routerLinkActive="active" (click)="closeMenu()">About</a></li>
+        <li><a routerLink="/services" routerLinkActive="active" (click)="closeMenu()">Services</a></li>
+        <li><a routerLink="/tutors" routerLinkActive="active" (click)="closeMenu()">Our Tutors</a></li>
+        <li><a routerLink="/pricing" routerLinkActive="active" (click)="closeMenu()">Pricing</a></li>
+        <li><a routerLink="/contact" routerLinkActive="active" (click)="closeMenu()">Contact</a></li>
+        
+        <!-- User is logged out -->
+        <ng-container *ngIf="!(isLoggedIn$ | async)">
+          <li><a routerLink="/login" routerLinkActive="active" (click)="closeMenu()">Login</a></li>
+          <li class="cta-btn"><a routerLink="/register" (click)="closeMenu()">Sign Up</a></li>
+        </ng-container>
+        
+        <!-- User is logged in -->
+        <ng-container *ngIf="isLoggedIn$ | async">
+          <li class="user-menu">
+            <a (click)="toggleUserDropdown($event)" class="user-menu-trigger">
+              {{ currentUser?.firstName || 'User' }} <span class="dropdown-arrow">▼</span>
+            </a>
+            <div class="user-dropdown" [class.active]="isUserDropdownOpen">
+              <a routerLink="/profile" (click)="closeDropdown()">My Profile</a>
+              <a routerLink="/my-sessions" (click)="closeDropdown()">My Sessions</a>
+              <a (click)="logout()" class="logout-link">Logout</a>
+            </div>
+          </li>
+          <li class="cta-btn"><a routerLink="/book" (click)="closeMenu()">Book a Session</a></li>
+        </ng-container>
+      </ul>
+    </div>
+  </div>
+</nav>
