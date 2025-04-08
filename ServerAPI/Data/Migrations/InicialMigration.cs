@@ -1,6 +1,5 @@
 // To generate this migration, run this command in the terminal:
 // dotnet ef migrations add InitialCreate -o Data/Migrations
-
 using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
