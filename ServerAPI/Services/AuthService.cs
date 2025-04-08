@@ -27,11 +27,16 @@ namespace ServerAPI.Services
 
         public async Task<AuthResponse> RegisterAsync(RegisterRequest request)
         {
+           try{
+            Console.WriteLine("Starting user registration");
             // Map RegisterRequest to User
             var user = _mapper.Map<User>(request);
+            Console.WriteLine($"User mapped: {user.FirstName} {user.LastName}, {user.Email}");
+            
             
             // Create user
             await _userService.CreateAsync(user, request.Password);
+            Console.WriteLine("User Created sucessfully");
             
             // Generate tokens
             var jwtToken = _tokenService.GenerateJwtToken(user);
@@ -45,6 +50,13 @@ namespace ServerAPI.Services
                 RefreshToken = refreshToken.Token,
                 ExpiresAt = _tokenService.GetJwtExpiryTime()
             };
+           }
+           catch (Exception ex)
+            {
+             Console.WriteLine($"Registration error: {ex.Message}");
+             Console.WriteLine($"Stack trace: {ex.StackTrace}");
+             throw;
+            }   
         }
 
         public async Task<AuthResponse> LoginAsync(LoginRequest request)

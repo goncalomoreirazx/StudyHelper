@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+import { Routes, provideRouter, withRouterConfig } from '@angular/router';
 import { HomeComponent } from './pages/home/home.component';
 import { TutorsComponent } from './pages/tutors/tutors.component';
 import { LoginComponent } from './pages/auth/login/login.component';

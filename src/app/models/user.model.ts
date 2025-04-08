@@ -9,9 +9,9 @@ export interface User {
   }
   
   export enum UserRole {
-    STUDENT = 'STUDENT',
-    TUTOR = 'TUTOR',
-    ADMIN = 'ADMIN'
+    STUDENT = '0',
+    TUTOR = '1',
+    ADMIN = '2'
   }
   
   export interface RegisterRequest {

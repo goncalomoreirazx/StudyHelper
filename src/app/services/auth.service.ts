@@ -56,7 +56,13 @@ export class AuthService {
    * Register a new user
    */
   register(registerData: RegisterRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/register`, registerData)
+    // Convert UserRole to number if it's a string
+    const payload = {
+      ...registerData,
+      role: typeof registerData.role === 'string' ? UserRole[registerData.role as unknown as keyof typeof UserRole] : registerData.role
+    };
+    
+    return this.http.post<AuthResponse>(`${this.apiUrl}/register`, payload)
       .pipe(
         tap(response => this.handleAuthentication(response)),
         catchError(error => this.handleError(error))

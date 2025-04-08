@@ -22,8 +22,8 @@ namespace ServerAPI.Models
 
     public enum UserRole
     {
-        STUDENT,
-        TUTOR,
-        ADMIN
+        STUDENT = 0,
+        TUTOR = 1,
+        ADMIN = 2
     }
 }

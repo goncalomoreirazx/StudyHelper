@@ -3,6 +3,7 @@ import { inject } from '@angular/core';
 import { Router, CanActivateFn, UrlTree } from '@angular/router';
 import { Observable, map, take } from 'rxjs';
 import { AuthService } from './auth.service';
+import { UserRole } from '../models/user.model';
 
 export const authGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
@@ -30,7 +31,7 @@ export const adminGuard: CanActivateFn = (route, state) => {
   return authService.currentUser$.pipe(
     take(1),
     map((user) => {
-      if (user && user.role === 'ADMIN') {
+      if (user && user.role === UserRole.ADMIN) {
         return true;
       }
       
@@ -54,7 +55,7 @@ export const tutorGuard: CanActivateFn = (route, state) => {
   return authService.currentUser$.pipe(
     take(1),
     map((user) => {
-      if (user && (user.role === 'TUTOR' || user.role === 'ADMIN')) {
+      if (user && (user.role === UserRole.TUTOR || user.role === UserRole.ADMIN)) {
         return true;
       }
       

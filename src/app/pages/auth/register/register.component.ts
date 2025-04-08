@@ -90,7 +90,7 @@ export class RegisterComponent {
       lastName: this.lastName?.value,
       email: this.email?.value,
       password: this.password?.value,
-      role: UserRole.STUDENT // Default role for new registrations
+      role: UserRole.STUDENT  // Use the enum value directly
     };
     
     this.authService.register(registerData).subscribe({

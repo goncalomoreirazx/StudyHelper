@@ -18,6 +18,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+    Console.WriteLine($"Attempting to connect to database with: {connectionString}");
 });
 // Add AutoMapper
 builder.Services.AddAutoMapper(typeof(Program));
