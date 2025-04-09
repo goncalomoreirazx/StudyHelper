@@ -1,92 +1,187 @@
 <!-- src/app/pages/my-sessions/my-sessions.component.html -->
 <main class="my-sessions-page">
-    <div class="container">
-      <div class="page-header">
-        <h1>My Sessions</h1>
-        <p>Manage your tutoring sessions and track your progress</p>
-      </div>
-      
-      <div class="sessions-tabs">
-        <button class="tab-button active">Upcoming Sessions</button>
-        <button class="tab-button">Past Sessions</button>
-      </div>
-      
-      <div class="sessions-container">
-        <!-- Upcoming Sessions Tab -->
-        <div class="tab-content active">
-          <div class="session-actions">
-            <button class="btn-primary">Book New Session</button>
-            <div class="search-box">
-              <input type="text" placeholder="Search sessions...">
-              <button class="search-button">🔍</button>
-            </div>
+  <div class="container">
+    <div class="page-header">
+      <h1>My Sessions</h1>
+      <p>Manage your tutoring sessions and track your progress</p>
+    </div>
+    
+    <div class="sessions-tabs">
+      <button 
+        class="tab-button" 
+        [class.active]="activeTab === 'upcoming'"
+        (click)="setActiveTab('upcoming')"
+      >
+        Upcoming Sessions
+      </button>
+      <button 
+        class="tab-button" 
+        [class.active]="activeTab === 'past'"
+        (click)="setActiveTab('past')"
+      >
+        Past Sessions
+      </button>
+    </div>
+    
+    <div class="sessions-container">
+      <!-- Upcoming Sessions Tab -->
+      <div class="tab-content" [class.active]="activeTab === 'upcoming'">
+        <div class="session-actions">
+          <a routerLink="/book" class="btn-primary">Book New Session</a>
+          <div class="search-box">
+            <input 
+              type="text" 
+              placeholder="Search sessions..." 
+              [(ngModel)]="searchQuery"
+            >
+            <button class="search-button">🔍</button>
           </div>
-          
-          <!-- Empty State -->
-          <div class="empty-state">
-            <div class="empty-icon">📅</div>
-            <h3>No Upcoming Sessions</h3>
-            <p>You don't have any upcoming tutoring sessions scheduled. Book your first session to get started!</p>
-            <a routerLink="/book" class="btn-primary">Book a Session</a>
-          </div>
-          
-          <!-- Session List (Hidden for now) -->
-          <div class="sessions-list" style="display: none;">
-            <!-- Session Card Template -->
-            <div class="session-card">
-              <div class="session-info">
-                <div class="session-date">
-                  <div class="date-box">
-                    <span class="month">Aug</span>
-                    <span class="day">15</span>
-                  </div>
-                  <span class="time">3:00 PM - 4:00 PM</span>
+        </div>
+        
+        <!-- Loading Indicator -->
+        <div *ngIf="loading" class="loading-container">
+          <div class="loading-spinner"></div>
+          <p>Loading your sessions...</p>
+        </div>
+        
+        <!-- Empty State -->
+        <div *ngIf="!loading && !hasUpcomingSessions" class="empty-state">
+          <div class="empty-icon">📅</div>
+          <h3>No Upcoming Sessions</h3>
+          <p>You don't have any upcoming tutoring sessions scheduled. Book your first session to get started!</p>
+          <a routerLink="/book" class="btn-primary">Book a Session</a>
+        </div>
+        
+        <!-- Session List -->
+        <div *ngIf="!loading && hasUpcomingSessions" class="sessions-list">
+          <!-- Live Session Indicator -->
+          <div *ngFor="let session of filteredUpcomingSessions" class="session-card" [class.live-session]="isSessionLive(session)">
+            <!-- Live Badge -->
+            <div *ngIf="isSessionLive(session)" class="live-badge">LIVE NOW</div>
+            
+            <div class="session-info">
+              <div class="session-date">
+                <div class="date-box">
+                  <span class="month">{{ getDayMonth(session.sessionDate).month }}</span>
+                  <span class="day">{{ getDayMonth(session.sessionDate).day }}</span>
                 </div>
-                
-                <div class="session-details">
-                  <h3>Mathematics - Calculus Introduction</h3>
-                  <div class="session-meta">
-                    <span class="meta-item">
-                      <span class="meta-icon">👨‍🏫</span>
-                      <span>Dr. Emily Parker</span>
-                    </span>
-                    <span class="meta-item">
-                      <span class="meta-icon">💻</span>
-                      <span>Online Session</span>
-                    </span>
-                  </div>
-                  <p class="session-description">Introduction to limits, derivatives, and basic calculus concepts.</p>
-                </div>
+                <span class="time">{{ formatTime(session.startTime) }} - {{ formatTime(session.endTime) }}</span>
               </div>
               
-              <div class="session-actions">
-                <button class="btn-secondary">Reschedule</button>
-                <button class="btn-secondary btn-outline">Cancel</button>
-                <button class="btn-primary">Join Session</button>
+              <div class="session-details">
+                <h3>{{ session.subjectName }}{{ session.subSubjectName ? ' - ' + session.subSubjectName : '' }}</h3>
+                <div class="session-meta">
+                  <span class="meta-item">
+                    <span class="meta-icon">👨‍🏫</span>
+                    <span>{{ session.tutorName }}</span>
+                  </span>
+                  <span class="meta-item">
+                    <span class="meta-icon">💻</span>
+                    <span>Online Session</span>
+                  </span>
+                </div>
+                <p *ngIf="session.notes" class="session-description">{{ session.notes }}</p>
               </div>
+            </div>
+            
+            <div class="session-actions">
+              <button 
+                *ngIf="!canJoinSession(session)"
+                class="btn-secondary"
+                (click)="cancelSession(session.id)"
+              >
+                Cancel
+              </button>
+              <button 
+                *ngIf="canJoinSession(session)"
+                class="btn-primary"
+                (click)="joinSession(session)"
+              >
+                Join Session
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Past Sessions Tab -->
+      <div class="tab-content" [class.active]="activeTab === 'past'">
+        <div class="session-actions">
+          <div class="filter-group">
+            <div class="search-box">
+              <input 
+                type="text" 
+                placeholder="Search past sessions..." 
+                [(ngModel)]="searchQuery"
+              >
+              <button class="search-button">🔍</button>
             </div>
           </div>
         </div>
         
-        <!-- Past Sessions Tab (Hidden by default) -->
-        <div class="tab-content" style="display: none;">
-          <div class="session-actions">
-            <div class="filter-dropdown">
-              <button class="filter-button">Filter by Subject <span>▼</span></button>
+        <!-- Loading Indicator -->
+        <div *ngIf="loading" class="loading-container">
+          <div class="loading-spinner"></div>
+          <p>Loading your sessions...</p>
+        </div>
+        
+        <!-- Empty State -->
+        <div *ngIf="!loading && !hasPastSessions" class="empty-state">
+          <div class="empty-icon">📚</div>
+          <h3>No Past Sessions</h3>
+          <p>You haven't completed any tutoring sessions yet. Once you have attended sessions, they'll appear here.</p>
+        </div>
+        
+        <!-- Session List -->
+        <div *ngIf="!loading && hasPastSessions" class="sessions-list">
+          <div *ngFor="let session of filteredPastSessions" class="session-card" [class.cancelled]="session.status === 'CANCELLED'">
+            <!-- Status Badge -->
+            <div *ngIf="session.status === 'CANCELLED'" class="status-badge cancelled">CANCELLED</div>
+            <div *ngIf="session.status === 'COMPLETED'" class="status-badge completed">COMPLETED</div>
+            
+            <div class="session-info">
+              <div class="session-date">
+                <div class="date-box">
+                  <span class="month">{{ getDayMonth(session.sessionDate).month }}</span>
+                  <span class="day">{{ getDayMonth(session.sessionDate).day }}</span>
+                </div>
+                <span class="time">{{ formatTime(session.startTime) }} - {{ formatTime(session.endTime) }}</span>
+              </div>
+              
+              <div class="session-details">
+                <h3>{{ session.subjectName }}{{ session.subSubjectName ? ' - ' + session.subSubjectName : '' }}</h3>
+                <div class="session-meta">
+                  <span class="meta-item">
+                    <span class="meta-icon">👨‍🏫</span>
+                    <span>{{ session.tutorName }}</span>
+                  </span>
+                  <span class="meta-item">
+                    <span class="meta-icon">💻</span>
+                    <span>Online Session</span>
+                  </span>
+                </div>
+                <p *ngIf="session.notes" class="session-description">{{ session.notes }}</p>
+              </div>
             </div>
-            <div class="search-box">
-              <input type="text" placeholder="Search past sessions...">
-              <button class="search-button">🔍</button>
+            
+            <div class="session-actions">
+              <button 
+                *ngIf="session.status === 'COMPLETED'"
+                class="btn-secondary"
+              >
+                Leave Review
+              </button>
+              <button 
+                class="btn-primary"
+                routerLink="/book"
+                [queryParams]="{tutorId: session.tutorId}"
+              >
+                Book Again
+              </button>
             </div>
-          </div>
-          
-          <!-- Empty State -->
-          <div class="empty-state">
-            <div class="empty-icon">📚</div>
-            <h3>No Past Sessions</h3>
-            <p>You haven't completed any tutoring sessions yet. Once you have attended sessions, they'll appear here.</p>
           </div>
         </div>
       </div>
     </div>
-  </main>
+  </div>
+</main>

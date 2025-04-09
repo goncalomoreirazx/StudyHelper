@@ -11,6 +11,8 @@ export interface Tutor {
   subjects: string[];
   photoUrl?: string; // Optional profile image
   experience: number; // Years of experience
+  hourlyRate?: number; // Adicionei a interrogação para tornar opcional
+
 }
 
 export interface PaginatedTutors {

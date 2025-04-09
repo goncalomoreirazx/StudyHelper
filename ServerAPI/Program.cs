@@ -28,7 +28,9 @@ builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<ITutorService, TutorService>(); // Add the TutorService
+builder.Services.AddScoped<ITutorService, TutorService>();
+builder.Services.AddScoped<ISubjectService, SubjectService>();
+builder.Services.AddScoped<ISessionService, SessionService>();
 
 // Add Authentication
 var key = Encoding.ASCII.GetBytes(builder.Configuration["JwtSettings:Secret"] ?? "a_very_long_secret_key_for_auth_at_least_32_chars");
