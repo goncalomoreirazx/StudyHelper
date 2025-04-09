@@ -12,6 +12,9 @@ namespace ServerAPI.Data
 
         public DbSet<User> Users { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
+        public DbSet<Tutor> Tutors { get; set; }
+        public DbSet<TutorSubject> TutorSubjects { get; set; }
+        public DbSet<TutorHobby> TutorHobbies { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -26,6 +29,25 @@ namespace ServerAPI.Data
                 entity.HasMany(u => u.RefreshTokens)
                       .WithOne(r => r.User)
                       .HasForeignKey(r => r.UserId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            // Configure Tutor entity
+            modelBuilder.Entity<Tutor>(entity =>
+            {
+                entity.HasOne(t => t.User)
+                      .WithOne()
+                      .HasForeignKey<Tutor>(t => t.UserId)
+                      .OnDelete(DeleteBehavior.Cascade);
+                
+                entity.HasMany(t => t.TutorSubjects)
+                      .WithOne(ts => ts.Tutor)
+                      .HasForeignKey(ts => ts.TutorId)
+                      .OnDelete(DeleteBehavior.Cascade);
+                
+                entity.HasMany(t => t.TutorHobbies)
+                      .WithOne(th => th.Tutor)
+                      .HasForeignKey(th => th.TutorId)
                       .OnDelete(DeleteBehavior.Cascade);
             });
 

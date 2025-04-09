@@ -13,13 +13,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
-// Add Entity Framework and SQL Server
+// Add Entity Framework and MySQL
 builder.Services.AddDbContext<ApplicationDbContext>(options => 
 {
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
     Console.WriteLine($"Attempting to connect to database with: {connectionString}");
 });
+
 // Add AutoMapper
 builder.Services.AddAutoMapper(typeof(Program));
 
@@ -27,6 +28,7 @@ builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ITutorService, TutorService>(); // Add the TutorService
 
 // Add Authentication
 var key = Encoding.ASCII.GetBytes(builder.Configuration["JwtSettings:Secret"] ?? "a_very_long_secret_key_for_auth_at_least_32_chars");
@@ -117,8 +119,16 @@ app.MapControllers();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    var context = services.GetRequiredService<ApplicationDbContext>();
-    context.Database.Migrate();
+    try
+    {
+        var context = services.GetRequiredService<ApplicationDbContext>();
+        context.Database.Migrate();
+        Console.WriteLine("Database migrations applied successfully.");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"An error occurred while applying migrations: {ex.Message}");
+    }
 }
 
 app.Run();

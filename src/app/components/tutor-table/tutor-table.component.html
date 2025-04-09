@@ -1,0 +1,63 @@
+<!-- src/app/components/tutor-table/tutor-table.component.html -->
+<div class="tutor-table-container">
+    <div *ngIf="loading" class="loading-overlay">
+      <div class="loading-spinner"></div>
+      <p>Loading tutors...</p>
+    </div>
+  
+    <table class="tutor-table" *ngIf="tutors.length > 0">
+      <thead>
+        <tr>
+          <th>Tutor</th>
+          <th>Profession</th>
+          <th>Subjects</th>
+          <th>Experience</th>
+          <th>Rating</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let tutor of tutors">
+          <td class="tutor-profile">
+            <div class="tutor-avatar" [class.has-photo]="tutor.photoUrl">
+              <img *ngIf="tutor.photoUrl" [src]="tutor.photoUrl" [alt]="tutor.name + ' photo'" class="avatar-image">
+              <span *ngIf="!tutor.photoUrl" class="avatar-initials">{{ getTutorInitials(tutor.name) }}</span>
+            </div>
+            <div class="tutor-info">
+              <h3 class="tutor-name">{{ tutor.name }}</h3>
+              <p class="tutor-bio">{{ truncate(tutor.bio, 100) }}</p>
+            </div>
+          </td>
+          <td>{{ tutor.profession }}</td>
+          <td class="subjects-cell">
+            <div class="subjects-list">
+              <span *ngFor="let subject of tutor.subjects.slice(0, 2)" class="subject-tag">
+                {{ subject }}
+              </span>
+              <span *ngIf="tutor.subjects.length > 2" class="more-tag">
+                +{{ tutor.subjects.length - 2 }} more
+              </span>
+            </div>
+          </td>
+          <td>{{ tutor.experience }} years</td>
+          <td class="rating-cell">
+            <div class="rating">
+              <span class="rating-stars">
+                <span class="stars">★★★★★</span>
+                <span class="stars overlay" [style.width.%]="tutor.rating*20">★★★★★</span>
+              </span>
+              <span class="rating-value">{{ tutor.rating.toFixed(1) }}</span>
+            </div>
+          </td>
+          <td class="action-cell">
+            <button class="btn-view" (click)="onViewDetails(tutor, $event)">View Profile</button>
+            <button class="btn-book" (click)="onBookSession(tutor, $event)">Book Session</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  
+    <div *ngIf="!loading && tutors.length === 0" class="no-tutors">
+      <p>No tutors found with the selected criteria.</p>
+    </div>
+  </div>
