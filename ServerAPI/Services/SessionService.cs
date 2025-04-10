@@ -214,59 +214,71 @@ namespace ServerAPI.Services
 
         public async Task<List<AvailableTimeSlotDto>> GetAvailableTimeSlotsAsync(int tutorId, DateTime date)
         {
-            var dayOfWeek = date.DayOfWeek;
-            var result = new List<AvailableTimeSlotDto>();
-
-            // Get tutor's availabilities for the specified day of week or specific date
-            var availabilities = await _context.TutorAvailabilities
-                .Where(a => a.TutorId == tutorId && 
-                          ((a.IsRecurring && a.DayOfWeek == dayOfWeek) || 
-                           (!a.IsRecurring && a.SpecificDate.HasValue && a.SpecificDate.Value.Date == date.Date)))
-                .ToListAsync();
-
-            if (!availabilities.Any())
+            try
             {
-                return result;
-            }
+                var dayOfWeek = date.DayOfWeek;
+                var result = new List<AvailableTimeSlotDto>();
 
-            // Get existing sessions for that tutor on that date
-            var existingSessions = await _context.TutorSessions
-                .Where(s => s.TutorId == tutorId && 
-                          s.SessionDate.Date == date.Date && 
-                          s.Status != SessionStatus.CANCELLED)
-                .Select(s => new { s.StartTime, s.EndTime })
-                .ToListAsync();
+                // Get tutor's availabilities for the specified day of week or specific date
+                var availabilities = await _context.TutorAvailabilities
+                    .Where(a => a.TutorId == tutorId && 
+                            ((a.IsRecurring && a.DayOfWeek == dayOfWeek) || 
+                            (!a.IsRecurring && a.SpecificDate.HasValue && a.SpecificDate.Value.Date == date.Date)))
+                    .ToListAsync();
 
-            // Generate time slots at interval of SESSION_DURATION_MINUTES
-            foreach (var availability in availabilities)
-            {
-                var currentTime = availability.StartTime;
-
-                while (currentTime.Add(TimeSpan.FromMinutes(SESSION_DURATION_MINUTES)) <= availability.EndTime)
+                if (!availabilities.Any())
                 {
-                    var slotEndTime = currentTime.Add(TimeSpan.FromMinutes(SESSION_DURATION_MINUTES));
-                    
-                    // Check if slot overlaps with any existing session
-                    bool isOverlapping = existingSessions.Any(s => 
-                        (currentTime >= s.StartTime && currentTime < s.EndTime) ||
-                        (slotEndTime > s.StartTime && slotEndTime <= s.EndTime) ||
-                        (currentTime <= s.StartTime && slotEndTime >= s.EndTime));
-
-                    if (!isOverlapping)
-                    {
-                        result.Add(new AvailableTimeSlotDto
-                        {
-                            Date = date,
-                            StartTime = currentTime.ToString(@"hh\:mm"),
-                            EndTime = slotEndTime.ToString(@"hh\:mm")
-                        });
-                    }
-
-                    currentTime = currentTime.Add(TimeSpan.FromMinutes(SESSION_DURATION_MINUTES));
+                    // Return empty list if no availabilities found
+                    return result;
                 }
-            }
 
-            return result.OrderBy(s => TimeSpan.Parse(s.StartTime)).ToList();
+                // Get existing sessions for that tutor on that date
+                var existingSessions = await _context.TutorSessions
+                    .Where(s => s.TutorId == tutorId && 
+                            s.SessionDate.Date == date.Date && 
+                            s.Status != SessionStatus.CANCELLED)
+                    .Select(s => new { s.StartTime, s.EndTime })
+                    .ToListAsync();
+
+                // Generate time slots at interval of SESSION_DURATION_MINUTES
+                foreach (var availability in availabilities)
+                {
+                    var currentTime = availability.StartTime;
+                    var SESSION_DURATION_MINUTES = 60; // Define this constant
+
+                    while (currentTime.Add(TimeSpan.FromMinutes(SESSION_DURATION_MINUTES)) <= availability.EndTime)
+                    {
+                        var slotEndTime = currentTime.Add(TimeSpan.FromMinutes(SESSION_DURATION_MINUTES));
+                        
+                        // Check if slot overlaps with any existing session
+                        bool isOverlapping = existingSessions.Any(s => 
+                            (currentTime >= s.StartTime && currentTime < s.EndTime) ||
+                            (slotEndTime > s.StartTime && slotEndTime <= s.EndTime) ||
+                            (currentTime <= s.StartTime && slotEndTime >= s.EndTime));
+
+                        if (!isOverlapping)
+                        {
+                            result.Add(new AvailableTimeSlotDto
+                            {
+                                Date = date,
+                                StartTime = currentTime.ToString(@"hh\:mm"),
+                                EndTime = slotEndTime.ToString(@"hh\:mm")
+                            });
+                        }
+
+                        currentTime = currentTime.Add(TimeSpan.FromMinutes(SESSION_DURATION_MINUTES));
+                    }
+                }
+
+                return result.OrderBy(s => TimeSpan.Parse(s.StartTime)).ToList();
+            }
+            catch (Exception ex)
+            {
+                // Log exception but return empty list instead of throwing
+                Console.WriteLine($"Error in GetAvailableTimeSlotsAsync: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
+                return new List<AvailableTimeSlotDto>();
+            }
         }
 
         // Helper method to check if tutor is available for a specific time

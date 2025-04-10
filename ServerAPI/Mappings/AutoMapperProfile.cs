@@ -20,9 +20,8 @@ namespace ServerAPI.Mappings
             CreateMap<Tutor, TutorDto>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => $"{src.User.FirstName} {src.User.LastName}"))
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.User.Email))
-                // Fix the mapping to use the Subject name instead of TutorSubject.Name
-                .ForMember(dest => dest.Subjects, opt => opt.MapFrom(src => 
-                    src.TutorSubjects.Select(ts => ts.Subject != null ? ts.Subject.Name : ts.Name).ToList()))
+                // Simplified mapping for subjects - just use the names directly
+                .ForMember(dest => dest.Subjects, opt => opt.MapFrom(src => src.TutorSubjects.Select(ts => ts.Name).ToList()))
                 .ForMember(dest => dest.Hobbies, opt => opt.MapFrom(src => src.TutorHobbies.Select(h => h.Name).ToList()));    
 
 
@@ -47,7 +46,6 @@ namespace ServerAPI.Mappings
                 .ForMember(dest => dest.DayOfWeek, opt => opt.MapFrom(src => src.DayOfWeek.ToString()))
                 .ForMember(dest => dest.StartTime, opt => opt.MapFrom(src => src.StartTime.ToString(@"hh\:mm")))
                 .ForMember(dest => dest.EndTime, opt => opt.MapFrom(src => src.EndTime.ToString(@"hh\:mm")));
-                
         }
     }
 }

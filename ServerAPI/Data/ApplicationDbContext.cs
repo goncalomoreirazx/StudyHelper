@@ -67,19 +67,16 @@ namespace ServerAPI.Data
                       .OnDelete(DeleteBehavior.Restrict); // Don't delete sessions if tutor is deleted
             });
             
+            // DO NOT configure a relationship between TutorSubject and Subject here
+            // This avoids EF Core trying to create a shadow property
+            
             // Configure Subject entity
-            modelBuilder.Entity<TutorSubject>(entity =>
+            modelBuilder.Entity<Subject>(entity =>
             {
-                entity.HasOne(ts => ts.Tutor)
-                    .WithMany(t => t.TutorSubjects)
-                    .HasForeignKey(ts => ts.TutorId)
-                    .OnDelete(DeleteBehavior.Cascade);
-                
-                // Comment out or remove the Subject relationship configuration
-                // entity.HasOne(ts => ts.Subject)
-                //       .WithMany(s => s.TutorSubjects)
-                //       .HasForeignKey(ts => ts.SubjectId)
-                //       .OnDelete(DeleteBehavior.Restrict);
+                entity.HasMany(s => s.SubSubjects)
+                      .WithOne(ss => ss.Subject)
+                      .HasForeignKey(ss => ss.SubjectId)
+                      .OnDelete(DeleteBehavior.Cascade);
             });
             
             // Configure TutorSession entity
@@ -100,106 +97,6 @@ namespace ServerAPI.Data
                       .HasForeignKey(ts => ts.SubSubjectId)
                       .OnDelete(DeleteBehavior.Restrict); // Don't delete sessions if sub-subject is deleted
             });
-
-            // Add seed data
-            modelBuilder.Entity<User>().HasData(
-                new User
-                {
-                    Id = 1,
-                    FirstName = "Admin",
-                    LastName = "User",
-                    Email = "admin@studyhelper.com",
-                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("Admin123!"),
-                    Role = UserRole.ADMIN,
-                    CreatedAt = DateTime.UtcNow
-                }
-            );
-            
-            // Seed subjects with sub-subjects
-            modelBuilder.Entity<Subject>().HasData(
-                new Subject
-                {
-                    Id = 1,
-                    Name = "Mathematics",
-                    Description = "Learn everything from basic arithmetic to advanced calculus with our expert math tutors.",
-                    Icon = "📊"
-                },
-                new Subject
-                {
-                    Id = 2,
-                    Name = "Science",
-                    Description = "Explore biology, chemistry, physics, and more with hands-on learning approaches.",
-                    Icon = "🧪"
-                },
-                new Subject
-                {
-                    Id = 3,
-                    Name = "English",
-                    Description = "Develop strong writing skills, reading comprehension, and literary analysis.",
-                    Icon = "📝"
-                },
-                new Subject
-                {
-                    Id = 4,
-                    Name = "History",
-                    Description = "Understand the past and its impact on our present with engaging history lessons.",
-                    Icon = "🏛️"
-                },
-                new Subject
-                {
-                    Id = 5,
-                    Name = "Languages",
-                    Description = "Learn Spanish, French, Mandarin, German and more with native-speaking tutors.",
-                    Icon = "🌍"
-                },
-                new Subject
-                {
-                    Id = 6,
-                    Name = "Computer Science",
-                    Description = "Build your coding skills with expert instruction in programming, algorithms, and more.",
-                    Icon = "💻"
-                }
-            );
-            
-            // Seed sub-subjects
-            modelBuilder.Entity<SubSubject>().HasData(
-                // Mathematics
-                new SubSubject { Id = 1, SubjectId = 1, Name = "Algebra" },
-                new SubSubject { Id = 2, SubjectId = 1, Name = "Calculus" },
-                new SubSubject { Id = 3, SubjectId = 1, Name = "Geometry" },
-                new SubSubject { Id = 4, SubjectId = 1, Name = "Statistics" },
-                new SubSubject { Id = 5, SubjectId = 1, Name = "Trigonometry" },
-                
-                // Science
-                new SubSubject { Id = 6, SubjectId = 2, Name = "Biology" },
-                new SubSubject { Id = 7, SubjectId = 2, Name = "Chemistry" },
-                new SubSubject { Id = 8, SubjectId = 2, Name = "Physics" },
-                new SubSubject { Id = 9, SubjectId = 2, Name = "Environmental Science" },
-                
-                // English
-                new SubSubject { Id = 10, SubjectId = 3, Name = "Grammar" },
-                new SubSubject { Id = 11, SubjectId = 3, Name = "Literature" },
-                new SubSubject { Id = 12, SubjectId = 3, Name = "Writing" },
-                new SubSubject { Id = 13, SubjectId = 3, Name = "Composition" },
-                
-                // History
-                new SubSubject { Id = 14, SubjectId = 4, Name = "World History" },
-                new SubSubject { Id = 15, SubjectId = 4, Name = "American History" },
-                new SubSubject { Id = 16, SubjectId = 4, Name = "European History" },
-                new SubSubject { Id = 17, SubjectId = 4, Name = "Political Science" },
-                
-                // Languages
-                new SubSubject { Id = 18, SubjectId = 5, Name = "Spanish" },
-                new SubSubject { Id = 19, SubjectId = 5, Name = "French" },
-                new SubSubject { Id = 20, SubjectId = 5, Name = "German" },
-                new SubSubject { Id = 21, SubjectId = 5, Name = "Chinese" },
-                
-                // Computer Science
-                new SubSubject { Id = 22, SubjectId = 6, Name = "Programming" },
-                new SubSubject { Id = 23, SubjectId = 6, Name = "Data Structures" },
-                new SubSubject { Id = 24, SubjectId = 6, Name = "Algorithms" },
-                new SubSubject { Id = 25, SubjectId = 6, Name = "Web Development" }
-            );
         }
     }
 }

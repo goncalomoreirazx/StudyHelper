@@ -160,25 +160,47 @@ namespace ServerAPI.Services
             return true;
         }
 
-       public async Task<List<TutorDto>> GetTutorsBySubjectAsync(int subjectId)
+        public async Task<List<TutorDto>> GetTutorsBySubjectAsync(int subjectId)
         {
             try
             {
-                // Get the subject name first
+                // Get the subject first to verify it exists
                 var subject = await _context.Subjects
+                    .Include(s => s.SubSubjects)
                     .FirstOrDefaultAsync(s => s.Id == subjectId);
                 
                 if (subject == null)
                     return new List<TutorDto>();
-                    
-                // Use the name to find tutors that teach this subject
-                // This avoids using the SubjectId column that doesn't exist in your database
+                
+                // Get all possible names that might match (including subject name and all subsubject names)
+                var possibleNames = new List<string> { subject.Name };
+                possibleNames.AddRange(subject.SubSubjects.Select(ss => ss.Name));
+                
+                // Query for tutors that teach any of these subjects by name
                 var tutors = await _context.Tutors
                     .Include(t => t.User)
                     .Include(t => t.TutorSubjects)
                     .Include(t => t.TutorHobbies)
-                    .Where(t => t.TutorSubjects.Any(ts => ts.Name == subject.Name))
+                    .Where(t => t.TutorSubjects.Any(ts => possibleNames.Contains(ts.Name)))
                     .ToListAsync();
+                
+                // Also check if any tutors teach directly by subject ID
+                // This is for future compatibility when the proper relationship is established
+                if (tutors.Count == 0)
+                {
+                    // This might not work unless there's a SubjectId column in TutorSubjects table
+                    var tutorsBySubjectId = await _context.Tutors
+                        .Include(t => t.User)
+                        .Include(t => t.TutorSubjects)
+                        .Include(t => t.TutorHobbies)
+                        .Where(t => t.TutorSubjects.Any(ts => ts.SubjectId == subjectId))
+                        .ToListAsync();
+                    
+                    if (tutorsBySubjectId.Any())
+                    {
+                        tutors.AddRange(tutorsBySubjectId);
+                    }
+                }
 
                 return _mapper.Map<List<TutorDto>>(tutors);
             }

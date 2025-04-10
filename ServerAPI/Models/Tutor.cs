@@ -13,7 +13,7 @@ namespace ServerAPI.Models
         public double Rating { get; set; } = 4.5; // Default rating
         public string PhotoUrl { get; set; } = string.Empty;
         [NotMapped]
-public decimal HourlyRate { get; set; } = 50.00m; // Default hourly rate
+        public decimal HourlyRate { get; set; } = 50.00m; // Default hourly rate
         
         // Navigation properties
         [JsonIgnore]
@@ -34,13 +34,13 @@ public decimal HourlyRate { get; set; } = 50.00m; // Default hourly rate
     {
         public int Id { get; set; }
         public int TutorId { get; set; }
-        public string Name { get; set; } = string.Empty; // Keep for backward compatibility
+        public string Name { get; set; } = string.Empty; // Subject name
+        public int SubjectId { get; set; } = 1; // Default to Mathematics (ID 1)
         
         [JsonIgnore]
         public Tutor Tutor { get; set; } = null!;
         
-        [JsonIgnore]
-        public Subject Subject { get; set; } = null!;
+        // Leave out the Subject property to avoid EF Core creating a shadow property
     }
 
     public class TutorHobby

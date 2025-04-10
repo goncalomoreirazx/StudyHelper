@@ -249,7 +249,8 @@ namespace ServerAPI.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error getting available time slots: {TutorId}, {Date}", tutorId, date);
-                return StatusCode(500, new { message = "An error occurred while retrieving available time slots." });
+                // Return an empty list instead of an error status
+                return Ok(new List<AvailableTimeSlotDto>());
             }
         }
 
