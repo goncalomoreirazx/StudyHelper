@@ -9,6 +9,7 @@ namespace ServerAPI.Services
         Task<List<TutorSessionDto>> GetAllSessionsAsync();
         Task<List<TutorSessionDto>> GetSessionsByStudentIdAsync(int studentId);
         Task<List<TutorSessionDto>> GetSessionsByTutorIdAsync(int tutorId);
+        Task<List<TutorSessionDto>> GetSessionsByTutorUserIdAsync(int userId); // Add this method
         Task<TutorSessionDto?> GetSessionByIdAsync(int id);
         Task<TutorSessionDto> CreateSessionAsync(int studentId, TutorSessionCreateRequest request);
         Task<TutorSessionDto?> UpdateSessionAsync(int id, TutorSessionUpdateRequest request);

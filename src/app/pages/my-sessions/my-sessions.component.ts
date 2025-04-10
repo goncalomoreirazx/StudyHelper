@@ -5,6 +5,8 @@ import { RouterModule } from '@angular/router';
 import { SessionService } from '../../services/session.service';
 import { TutorSession, SessionStatus } from '../../models/session.model';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
+import { UserRole } from '../../models/user.model';
 
 @Component({
   selector: 'app-my-sessions',
@@ -27,48 +29,100 @@ export class MySessionsComponent implements OnInit {
   // Search filter
   searchQuery: string = '';
   
-  constructor(private sessionService: SessionService) {}
+  // Role check
+  isTutor: boolean = false;
+  currentUserName: string = '';
+  
+  constructor(
+    private sessionService: SessionService,
+    private authService: AuthService
+  ) {}
   
   ngOnInit(): void {
-    this.loadSessions();
-  }
-  
-  loadSessions(): void {
-    this.loading = true;
-    
-    this.sessionService.getMyStudentSessions().subscribe({
-      next: (sessions) => {
-        // Sort sessions by date and time
-        sessions.sort((a, b) => {
-          const dateA = new Date(a.sessionDate + 'T' + a.startTime);
-          const dateB = new Date(b.sessionDate + 'T' + b.startTime);
-          return dateA.getTime() - dateB.getTime();
-        });
+      // Check current user and role
+      const currentUser = this.authService.getCurrentUser();
+      console.log('Current user:', currentUser);
+      
+      if (currentUser) {
+        console.log('User role (raw):', currentUser.role);
         
-        const now = new Date();
+        // Check if user is a tutor - handle string value explicitly
+        // This avoids the type comparison error
+        this.isTutor = currentUser.role === UserRole.TUTOR;
+        console.log('isTutor flag set to:', this.isTutor);
         
-        // Split into upcoming and past sessions
-        this.upcomingSessions = sessions.filter(session => {
-          const sessionDate = new Date(session.sessionDate);
-          return (sessionDate > now || 
-                 (sessionDate.getDate() === now.getDate() && 
-                  sessionDate.getMonth() === now.getMonth() && 
-                  sessionDate.getFullYear() === now.getFullYear())) && 
-                 session.status !== SessionStatus.CANCELLED;
-        });
-        
-        this.pastSessions = sessions.filter(session => {
-          const sessionDate = new Date(session.sessionDate);
-          return sessionDate < now || session.status === SessionStatus.CANCELLED;
-        });
-        
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error('Error loading sessions:', err);
-        this.loading = false;
+        // Set user name for display
+        this.currentUserName = `${currentUser.firstName} ${currentUser.lastName}`;
       }
+      
+      this.loadSessions();
+    }
+    
+    loadSessions(): void {
+      this.loading = true;
+      
+      // Load the appropriate sessions based on role
+      if (this.isTutor) {
+        console.log('Loading sessions for role: TUTOR');
+        this.loadTutorSessions();
+      } else {
+        console.log('Loading sessions for role: STUDENT');
+        this.loadStudentSessions();
+      }
+    }
+    
+    loadStudentSessions(): void {
+      this.sessionService.getMyStudentSessions().subscribe({
+        next: (sessions) => {
+          console.log('Student sessions received:', sessions);
+          this.processSessions(sessions);
+        },
+        error: (err) => {
+          console.error('Error loading student sessions:', err);
+          this.loading = false;
+        }
+      });
+    }
+    
+    loadTutorSessions(): void {
+      this.sessionService.getMyTutorSessions().subscribe({
+        next: (sessions) => {
+          console.log('Tutor sessions received:', sessions);
+          this.processSessions(sessions);
+        },
+        error: (err) => {
+          console.error('Error loading tutor sessions:', err);
+          this.loading = false;
+        }
+      });
+    }
+  
+  processSessions(sessions: TutorSession[]): void {
+    // Sort sessions by date and time
+    sessions.sort((a, b) => {
+      const dateA = new Date(a.sessionDate + 'T' + a.startTime);
+      const dateB = new Date(b.sessionDate + 'T' + b.startTime);
+      return dateA.getTime() - dateB.getTime();
     });
+    
+    const now = new Date();
+    
+    // Split into upcoming and past sessions
+    this.upcomingSessions = sessions.filter(session => {
+      const sessionDate = new Date(session.sessionDate);
+      return (sessionDate > now || 
+             (sessionDate.getDate() === now.getDate() && 
+              sessionDate.getMonth() === now.getMonth() && 
+              sessionDate.getFullYear() === now.getFullYear())) && 
+             session.status !== SessionStatus.CANCELLED;
+    });
+    
+    this.pastSessions = sessions.filter(session => {
+      const sessionDate = new Date(session.sessionDate);
+      return sessionDate < now || session.status === SessionStatus.CANCELLED;
+    });
+    
+    this.loading = false;
   }
   
   setActiveTab(tab: 'upcoming' | 'past'): void {
@@ -104,7 +158,7 @@ export class MySessionsComponent implements OnInit {
   joinSession(session: TutorSession): void {
     // For this example, we'll just show an alert
     // In a real application, this would redirect to a video conferencing solution or virtual classroom
-    alert(`Joining session with ${session.tutorName}. This would typically open a virtual classroom.`);
+    alert(`Joining session with ${this.isTutor ? session.studentName : session.tutorName}. This would typically open a virtual classroom.`);
   }
   
   isSessionToday(session: TutorSession): boolean {
@@ -186,7 +240,7 @@ export class MySessionsComponent implements OnInit {
     
     const query = this.searchQuery.toLowerCase().trim();
     return sessions.filter(session => 
-      session.tutorName.toLowerCase().includes(query) ||
+      (this.isTutor ? session.studentName.toLowerCase() : session.tutorName.toLowerCase()).includes(query) ||
       session.subjectName.toLowerCase().includes(query) ||
       (session.subSubjectName && session.subSubjectName.toLowerCase().includes(query)) ||
       session.notes.toLowerCase().includes(query)
@@ -208,5 +262,14 @@ export class MySessionsComponent implements OnInit {
     const period = hours >= 12 ? 'PM' : 'AM';
     const formattedHours = hours % 12 || 12;
     return `${formattedHours}:${minutes.toString().padStart(2, '0')} ${period}`;
+  }
+  
+  // Role-based text helpers
+  getSessionPartnerLabel(): string {
+    return this.isTutor ? 'Student' : 'Tutor';
+  }
+  
+  getSessionPartnerName(session: TutorSession): string {
+    return this.isTutor ? session.studentName : session.tutorName;
   }
 }

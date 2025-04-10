@@ -70,10 +70,8 @@ namespace ServerAPI.Controllers
                     return Unauthorized(new { message = "User not authenticated." });
                 }
 
-                // Assuming we have a way to get tutorId from userId. 
-                // For simplicity, we're using the same ID.
-                int tutorId = int.Parse(userIdClaim.Value);
-                var sessions = await _sessionService.GetSessionsByTutorIdAsync(tutorId);
+                int userId = int.Parse(userIdClaim.Value);
+                var sessions = await _sessionService.GetSessionsByTutorUserIdAsync(userId);
                 return Ok(sessions);
             }
             catch (Exception ex)

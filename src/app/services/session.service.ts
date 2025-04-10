@@ -1,7 +1,7 @@
 // src/app/services/session.service.ts
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, catchError, of } from 'rxjs';
+import { HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
+import { Observable, catchError, of, throwError } from 'rxjs';
 import { 
   TutorSession, 
   TutorSessionCreateRequest, 
@@ -68,7 +68,7 @@ export class SessionService {
   createSession(session: TutorSessionCreateRequest): Observable<TutorSession> {
     return this.http.post<TutorSession>(this.apiUrl, session)
       .pipe(
-        catchError(this.handleError<TutorSession>('createSession'))
+        catchError(error => this.handleHttpError(error, 'createSession'))
       );
   }
 
@@ -142,10 +142,31 @@ export class SessionService {
    */
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
-      console.error(`${operation} failed: ${error.message}`);
+      console.error(`${operation} failed:`, error);
       
       // Let the app keep running by returning an empty result
       return of(result as T);
     };
+  }
+  
+  /**
+   * Handle HTTP errors and throw a more descriptive error
+   * @param error - The HTTP error
+   * @param operation - name of the operation that failed
+   */
+  private handleHttpError(error: HttpErrorResponse, operation = 'operation'): Observable<never> {
+    let errorMessage = `Error in ${operation}: `;
+    
+    if (error.error instanceof ErrorEvent) {
+      // Client-side error
+      errorMessage += `Client error: ${error.error.message}`;
+    } else {
+      // Server-side error
+      errorMessage += error.error?.message || 
+                     `Server returned code ${error.status}, message: ${error.message}`;
+    }
+    
+    console.error(errorMessage);
+    return throwError(() => new Error(errorMessage));
   }
 }

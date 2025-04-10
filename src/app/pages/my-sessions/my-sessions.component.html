@@ -3,7 +3,8 @@
   <div class="container">
     <div class="page-header">
       <h1>My Sessions</h1>
-      <p>Manage your tutoring sessions and track your progress</p>
+      <p *ngIf="!isTutor">Manage your tutoring sessions and track your progress</p>
+      <p *ngIf="isTutor">Manage your scheduled tutoring sessions with students</p>
     </div>
     
     <div class="sessions-tabs">
@@ -27,7 +28,7 @@
       <!-- Upcoming Sessions Tab -->
       <div class="tab-content" [class.active]="activeTab === 'upcoming'">
         <div class="session-actions">
-          <a routerLink="/book" class="btn-primary">Book New Session</a>
+          <a *ngIf="!isTutor" routerLink="/book" class="btn-primary">Book New Session</a>
           <div class="search-box">
             <input 
               type="text" 
@@ -48,8 +49,9 @@
         <div *ngIf="!loading && !hasUpcomingSessions" class="empty-state">
           <div class="empty-icon">📅</div>
           <h3>No Upcoming Sessions</h3>
-          <p>You don't have any upcoming tutoring sessions scheduled. Book your first session to get started!</p>
-          <a routerLink="/book" class="btn-primary">Book a Session</a>
+          <p *ngIf="!isTutor">You don't have any upcoming tutoring sessions scheduled. Book your first session to get started!</p>
+          <p *ngIf="isTutor">You don't have any upcoming sessions scheduled with students.</p>
+          <a *ngIf="!isTutor" routerLink="/book" class="btn-primary">Book a Session</a>
         </div>
         
         <!-- Session List -->
@@ -73,7 +75,7 @@
                 <div class="session-meta">
                   <span class="meta-item">
                     <span class="meta-icon">👨‍🏫</span>
-                    <span>{{ session.tutorName }}</span>
+                    <span><strong>{{ getSessionPartnerLabel() }}:</strong> {{ getSessionPartnerName(session) }}</span>
                   </span>
                   <span class="meta-item">
                     <span class="meta-icon">💻</span>
@@ -129,7 +131,8 @@
         <div *ngIf="!loading && !hasPastSessions" class="empty-state">
           <div class="empty-icon">📚</div>
           <h3>No Past Sessions</h3>
-          <p>You haven't completed any tutoring sessions yet. Once you have attended sessions, they'll appear here.</p>
+          <p *ngIf="!isTutor">You haven't completed any tutoring sessions yet. Once you have attended sessions, they'll appear here.</p>
+          <p *ngIf="isTutor">You haven't completed any tutoring sessions with students yet.</p>
         </div>
         
         <!-- Session List -->
@@ -153,7 +156,7 @@
                 <div class="session-meta">
                   <span class="meta-item">
                     <span class="meta-icon">👨‍🏫</span>
-                    <span>{{ session.tutorName }}</span>
+                    <span><strong>{{ getSessionPartnerLabel() }}:</strong> {{ getSessionPartnerName(session) }}</span>
                   </span>
                   <span class="meta-item">
                     <span class="meta-icon">💻</span>
@@ -166,12 +169,13 @@
             
             <div class="session-actions">
               <button 
-                *ngIf="session.status === 'COMPLETED'"
+                *ngIf="session.status === 'COMPLETED' && !isTutor"
                 class="btn-secondary"
               >
                 Leave Review
               </button>
               <button 
+                *ngIf="!isTutor"
                 class="btn-primary"
                 routerLink="/book"
                 [queryParams]="{tutorId: session.tutorId}"

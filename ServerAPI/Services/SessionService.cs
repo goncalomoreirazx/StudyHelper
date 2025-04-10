@@ -49,22 +49,32 @@ namespace ServerAPI.Services
             return _mapper.Map<List<TutorSessionDto>>(sessions);
         }
 
-        public async Task<List<TutorSessionDto>> GetSessionsByTutorIdAsync(int tutorId)
+       public async Task<List<TutorSessionDto>> GetSessionsByTutorUserIdAsync(int userId)
         {
+            // First, find the tutor associated with this user
+            var tutor = await _context.Tutors
+                .FirstOrDefaultAsync(t => t.UserId == userId);
+            
+            if (tutor == null)
+            {
+                // If no tutor found for this user, return empty list
+                return new List<TutorSessionDto>();
+            }
+            
+            // Use the found tutor ID to get sessions
             var sessions = await _context.TutorSessions
                 .Include(s => s.Student)
                 .Include(s => s.Tutor)
                     .ThenInclude(t => t.User)
                 .Include(s => s.Subject)
                 .Include(s => s.SubSubject)
-                .Where(s => s.TutorId == tutorId)
+                .Where(s => s.TutorId == tutor.Id)
                 .OrderByDescending(s => s.SessionDate)
                 .ThenBy(s => s.StartTime)
                 .ToListAsync();
 
             return _mapper.Map<List<TutorSessionDto>>(sessions);
         }
-
         public async Task<TutorSessionDto?> GetSessionByIdAsync(int id)
         {
             var session = await _context.TutorSessions
@@ -310,5 +320,10 @@ namespace ServerAPI.Services
 
             return !hasOverlappingSession;
         }
+
+    public Task<List<TutorSessionDto>> GetSessionsByTutorIdAsync(int tutorId)
+    {
+      throw new NotImplementedException();
     }
+  }
 }

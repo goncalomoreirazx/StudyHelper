@@ -23,15 +23,15 @@ namespace ServerAPI.Services
                 ?? "a_very_long_secret_key_for_auth_at_least_32_chars");
             
             var tokenDescriptor = new SecurityTokenDescriptor
+{
+            Subject = new ClaimsIdentity(new[]
             {
-                Subject = new ClaimsIdentity(new[]
-                {
-                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                    new Claim(ClaimTypes.Email, user.Email),
-                    new Claim(ClaimTypes.GivenName, user.FirstName),
-                    new Claim(ClaimTypes.Surname, user.LastName),
-                    new Claim(ClaimTypes.Role, user.Role.ToString())
-                }),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.GivenName, user.FirstName),
+                new Claim(ClaimTypes.Surname, user.LastName),
+                new Claim(ClaimTypes.Role, user.Role.ToString()) // This line is critical
+            }),
                 Expires = DateTime.UtcNow.AddHours(2), // Token expires after 2 hours
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(key), 

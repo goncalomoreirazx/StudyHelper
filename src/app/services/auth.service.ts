@@ -56,10 +56,10 @@ export class AuthService {
    * Register a new user
    */
   register(registerData: RegisterRequest): Observable<AuthResponse> {
-    // Convert UserRole to number if it's a string
+    // Convert UserRole to appropriate format
     const payload = {
       ...registerData,
-      role: typeof registerData.role === 'string' ? UserRole[registerData.role as unknown as keyof typeof UserRole] : registerData.role
+      role: this.normalizeUserRole(registerData.role)
     };
     
     return this.http.post<AuthResponse>(`${this.apiUrl}/register`, payload)
@@ -159,6 +159,40 @@ export class AuthService {
   hasRole(role: UserRole): boolean {
     const currentUser = this.getCurrentUser();
     if (!currentUser) return false;
-    return currentUser.role === role;
+    
+    // Convert role values to string for comparison
+    const userRoleStr = String(currentUser.role);
+    const checkRoleStr = String(role);
+    
+    return userRoleStr === checkRoleStr;
+  }
+  
+  /**
+   * Normalize user role to number format expected by backend
+   */
+  private normalizeUserRole(role?: UserRole): number {
+    if (role === undefined || role === null) {
+      return 0; // Default to STUDENT
+    }
+    
+    // If role is already a number between 0-2, return it
+    if (typeof role === 'number' && role >= 0 && role <= 2) {
+      return role;
+    }
+    
+    // If role is a string representation, convert it
+    if (typeof role === 'string') {
+      switch (role) {
+        case 'STUDENT': return 0;
+        case 'TUTOR': return 1;
+        case 'ADMIN': return 2;
+        default: return 0;
+      }
+    }
+    
+    // Default to STUDENT
+    return 0;
+
+    
   }
 }
