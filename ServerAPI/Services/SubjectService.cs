@@ -160,17 +160,36 @@ namespace ServerAPI.Services
             return true;
         }
 
-        public async Task<List<TutorDto>> GetTutorsBySubjectAsync(int subjectId)
+       public async Task<List<TutorDto>> GetTutorsBySubjectAsync(int subjectId)
         {
-            var tutors = await _context.Tutors
-                .Include(t => t.User)
-                .Include(t => t.TutorSubjects)
-                    .ThenInclude(ts => ts.Subject)
-                .Include(t => t.TutorHobbies)
-                .Where(t => t.TutorSubjects.Any(ts => ts.SubjectId == subjectId))
-                .ToListAsync();
+            try
+            {
+                // Get the subject name first
+                var subject = await _context.Subjects
+                    .FirstOrDefaultAsync(s => s.Id == subjectId);
+                
+                if (subject == null)
+                    return new List<TutorDto>();
+                    
+                // Use the name to find tutors that teach this subject
+                // This avoids using the SubjectId column that doesn't exist in your database
+                var tutors = await _context.Tutors
+                    .Include(t => t.User)
+                    .Include(t => t.TutorSubjects)
+                    .Include(t => t.TutorHobbies)
+                    .Where(t => t.TutorSubjects.Any(ts => ts.Name == subject.Name))
+                    .ToListAsync();
 
-            return _mapper.Map<List<TutorDto>>(tutors);
+                return _mapper.Map<List<TutorDto>>(tutors);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception details
+                Console.WriteLine($"Error in GetTutorsBySubjectAsync: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
+                // Return empty list in case of error
+                return new List<TutorDto>();
+            }
         }
     }
 }

@@ -57,13 +57,20 @@ namespace ServerAPI.Controllers
         {
             try
             {
+                // First check if the subject exists
+                var subject = await _subjectService.GetSubjectByIdAsync(id);
+                if (subject == null)
+                {
+                    return NotFound(new { message = $"Subject with ID {id} not found." });
+                }
+
                 var tutors = await _subjectService.GetTutorsBySubjectAsync(id);
                 return Ok(tutors);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error getting tutors by subject ID: {Id}", id);
-                return StatusCode(500, new { message = "An error occurred while retrieving tutors." });
+                return StatusCode(500, new { message = "An error occurred while retrieving tutors.", details = ex.Message });
             }
         }
 

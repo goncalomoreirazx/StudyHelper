@@ -68,17 +68,18 @@ namespace ServerAPI.Data
             });
             
             // Configure Subject entity
-            modelBuilder.Entity<Subject>(entity =>
+            modelBuilder.Entity<TutorSubject>(entity =>
             {
-                entity.HasMany(s => s.SubSubjects)
-                      .WithOne(ss => ss.Subject)
-                      .HasForeignKey(ss => ss.SubjectId)
-                      .OnDelete(DeleteBehavior.Cascade);
-                      
-                entity.HasMany(s => s.TutorSubjects)
-                      .WithOne(ts => ts.Subject)
-                      .HasForeignKey(ts => ts.SubjectId)
-                      .OnDelete(DeleteBehavior.Restrict); // Don't cascade delete when subject is deleted
+                entity.HasOne(ts => ts.Tutor)
+                    .WithMany(t => t.TutorSubjects)
+                    .HasForeignKey(ts => ts.TutorId)
+                    .OnDelete(DeleteBehavior.Cascade);
+                
+                // Comment out or remove the Subject relationship configuration
+                // entity.HasOne(ts => ts.Subject)
+                //       .WithMany(s => s.TutorSubjects)
+                //       .HasForeignKey(ts => ts.SubjectId)
+                //       .OnDelete(DeleteBehavior.Restrict);
             });
             
             // Configure TutorSession entity

@@ -32,7 +32,6 @@ namespace ServerAPI.Models
     {
         public int Id { get; set; }
         public int TutorId { get; set; }
-        public int SubjectId { get; set; } // Updated to reference Subject.Id
         public string Name { get; set; } = string.Empty; // Keep for backward compatibility
         
         [JsonIgnore]
