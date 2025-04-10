@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ServerAPI.Models
 {
@@ -11,7 +12,8 @@ namespace ServerAPI.Models
         public int Experience { get; set; } // Years of experience
         public double Rating { get; set; } = 4.5; // Default rating
         public string PhotoUrl { get; set; } = string.Empty;
-        public decimal HourlyRate { get; set; } = 50.00m; // Default hourly rate
+        [NotMapped]
+public decimal HourlyRate { get; set; } = 50.00m; // Default hourly rate
         
         // Navigation properties
         [JsonIgnore]
