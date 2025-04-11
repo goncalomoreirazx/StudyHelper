@@ -1,0 +1,74 @@
+<!-- src/app/admin/components/admin-login/admin-login.component.html -->
+<div class="admin-login-page">
+    <div class="login-container">
+      <div class="login-header">
+        <div class="logo">StudyHelper</div>
+        <h1>Admin Portal</h1>
+        <p>Sign in to access the administration dashboard</p>
+      </div>
+      
+      <div *ngIf="errorMessage" class="error-message">
+        <span class="error-icon">!</span>
+        <p>{{ errorMessage }}</p>
+      </div>
+      
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <div class="input-wrapper">
+            <span class="input-icon">✉️</span>
+            <input 
+              type="email" 
+              id="email" 
+              formControlName="email" 
+              placeholder="admin@example.com"
+              [class.error]="email?.invalid && (email?.dirty || email?.touched)"
+            >
+          </div>
+          <div class="error-feedback" *ngIf="email?.invalid && (email?.dirty || email?.touched)">
+            <div *ngIf="email?.errors?.['required']">Email is required</div>
+            <div *ngIf="email?.errors?.['email']">Please enter a valid email address</div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="input-wrapper">
+            <span class="input-icon">🔒</span>
+            <input 
+              [type]="showPassword ? 'text' : 'password'" 
+              id="password" 
+              formControlName="password" 
+              placeholder="Enter your password"
+              [class.error]="password?.invalid && (password?.dirty || password?.touched)"
+            >
+            <button 
+              type="button" 
+              class="password-toggle" 
+              (click)="togglePasswordVisibility()"
+              [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+            >
+              {{ showPassword ? '👁️' : '👁️‍🗨️' }}
+            </button>
+          </div>
+          <div class="error-feedback" *ngIf="password?.invalid && (password?.dirty || password?.touched)">
+            <div *ngIf="password?.errors?.['required']">Password is required</div>
+          </div>
+        </div>
+        
+        <button 
+          type="submit" 
+          class="btn-submit" 
+          [disabled]="isSubmitting || loginForm.invalid"
+        >
+          <span *ngIf="isSubmitting" class="spinner"></span>
+          <span>{{ isSubmitting ? 'Signing in...' : 'Sign In' }}</span>
+        </button>
+      </form>
+      
+      <div class="login-footer">
+        <p>This portal is restricted to authorized administrators only.</p>
+        <p>If you need assistance, please contact the system administrator.</p>
+      </div>
+    </div>
+  </div>

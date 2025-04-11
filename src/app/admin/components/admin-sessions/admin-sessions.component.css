@@ -1,0 +1,67 @@
+/* src/app/admin/components/admin-sessions/admin-sessions.component.css */
+.sessions-container {
+    max-width: 100%;
+  }
+  
+  .page-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--neutral-800);
+    margin-bottom: var(--spacing-lg);
+  }
+  
+  .card {
+    background-color: white;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+  }
+  
+  .placeholder-card {
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .placeholder-content {
+    text-align: center;
+    max-width: 500px;
+    padding: var(--spacing-xl);
+  }
+  
+  .placeholder-icon {
+    font-size: 3rem;
+    margin-bottom: var(--spacing-lg);
+    color: var(--neutral-400);
+  }
+  
+  .placeholder-content h2 {
+    font-size: 1.5rem;
+    color: var(--neutral-700);
+    margin-bottom: var(--spacing-md);
+  }
+  
+  .placeholder-content p {
+    color: var(--neutral-600);
+    line-height: 1.6;
+  }
+  
+  /* Responsive Styles */
+  @media (max-width: 576px) {
+    .page-title {
+      font-size: 1.25rem;
+    }
+    
+    .placeholder-content {
+      padding: var(--spacing-lg);
+    }
+    
+    .placeholder-icon {
+      font-size: 2.5rem;
+    }
+    
+    .placeholder-content h2 {
+      font-size: 1.25rem;
+    }
+  }

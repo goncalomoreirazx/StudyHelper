@@ -1,0 +1,57 @@
+<!-- src/app/admin/components/admin-layout/admin-layout.component.html -->
+<div class="admin-layout" [class.collapsed]="isSidebarCollapsed">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="sidebar-header">
+        <div class="logo-container">
+          <h1 class="logo">StudyHelper</h1>
+          <span class="admin-badge">ADMIN</span>
+        </div>
+        <button class="toggle-sidebar" (click)="toggleSidebar()">
+          <span class="toggle-icon">≡</span>
+        </button>
+      </div>
+      
+      <div class="sidebar-content">
+        <app-admin-sidebar></app-admin-sidebar>
+      </div>
+      
+      <div class="sidebar-footer">
+        <div class="admin-info">
+          <div class="admin-avatar">
+            {{ currentAdmin?.firstName?.[0] }}{{ currentAdmin?.lastName?.[0] }}
+          </div>
+          <div class="admin-details" *ngIf="!isSidebarCollapsed">
+            <p class="admin-name">{{ currentAdmin?.firstName }} {{ currentAdmin?.lastName }}</p>
+            <p class="admin-email">{{ currentAdmin?.email }}</p>
+          </div>
+        </div>
+        <button class="logout-button" (click)="logout()">
+          <span class="logout-icon">⬅️</span>
+          <span class="logout-text" *ngIf="!isSidebarCollapsed">Logout</span>
+        </button>
+      </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="admin-content">
+      <header class="admin-header">
+        <button class="mobile-toggle" (click)="toggleSidebar()">
+          <span class="toggle-icon">≡</span>
+        </button>
+        <div class="page-title">
+          <!-- Will be dynamically updated based on the current route -->
+          <h1>Admin Dashboard</h1>
+        </div>
+        <div class="header-actions">
+          <div class="admin-avatar-mobile">
+            {{ currentAdmin?.firstName?.[0] }}{{ currentAdmin?.lastName?.[0] }}
+          </div>
+        </div>
+      </header>
+      
+      <div class="content-wrapper">
+        <router-outlet></router-outlet>
+      </div>
+    </main>
+  </div>

@@ -1,0 +1,94 @@
+<!-- src/app/admin/components/admin-dashboard/admin-dashboard.component.html -->
+<div class="dashboard-container">
+    <h1 class="page-title">Dashboard Overview</h1>
+    
+    <!-- Dashboard Cards -->
+    <div class="dashboard-cards">
+      <div class="card dashboard-card" *ngFor="let card of dashboardCards">
+        <div class="card-icon">{{ card.icon }}</div>
+        <div class="card-content">
+          <h2 class="card-title">{{ card.title }}</h2>
+          <p class="card-value">{{ card.value }}</p>
+          <div class="card-change" [class.positive]="card.change > 0" [class.neutral]="card.change === 0">
+            <span *ngIf="card.change > 0">↑</span>
+            <span *ngIf="card.change < 0">↓</span>
+            <span *ngIf="card.change === 0">•</span>
+            {{ card.change }} from last month
+          </div>
+        </div>
+        <a [routerLink]="card.route" class="card-link">View</a>
+      </div>
+    </div>
+    
+    <!-- Dashboard Content -->
+    <div class="dashboard-content">
+      <!-- Recent Sessions -->
+      <div class="card dashboard-section">
+        <div class="section-header">
+          <h2>Recent Sessions</h2>
+          <a routerLink="/admin/sessions" class="view-all">View All</a>
+        </div>
+        
+        <div class="sessions-list">
+          <table class="sessions-table">
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>Tutor</th>
+                <th>Subject</th>
+                <th>Date & Time</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let session of recentSessions">
+                <td>{{ session.studentName }}</td>
+                <td>{{ session.tutorName }}</td>
+                <td>{{ session.subject }}</td>
+                <td>
+                  <div class="date-time">
+                    <span class="date">{{ session.date | date:'MMM d, yyyy' }}</span>
+                    <span class="time">{{ session.time }}</span>
+                  </div>
+                </td>
+                <td>
+                  <span class="status-badge" [class]="getStatusClass(session.status)">
+                    {{ session.status }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      <!-- Quick Actions -->
+      <div class="card dashboard-section">
+        <div class="section-header">
+          <h2>Quick Actions</h2>
+        </div>
+        
+        <div class="quick-actions">
+          <a routerLink="/admin/users" class="quick-action-card">
+            <div class="action-icon">➕</div>
+            <div class="action-title">Add New User</div>
+          </a>
+          
+          <a routerLink="/admin/tutors" class="quick-action-card">
+            <div class="action-icon">👨‍🏫</div>
+            <div class="action-title">Manage Tutors</div>
+          </a>
+          
+          <a routerLink="/admin/subjects" class="quick-action-card">
+            <div class="action-icon">📚</div>
+            <div class="action-title">Edit Subjects</div>
+          </a>
+          
+          <a routerLink="/admin/sessions" class="quick-action-card">
+            <div class="action-icon">📊</div>
+            <div class="action-title">View Reports</div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>

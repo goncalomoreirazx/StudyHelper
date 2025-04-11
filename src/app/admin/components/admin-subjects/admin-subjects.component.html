@@ -1,0 +1,205 @@
+<!-- src/app/admin/components/admin-subjects/admin-subjects.component.html -->
+<div class="admin-subjects-container">
+    <div class="admin-header">
+      <h1>Subject Management</h1>
+      <p>Manage subject areas and their specific topics for tutoring sessions</p>
+    </div>
+  
+    <!-- Error and Success Messages -->
+    <div *ngIf="error" class="alert alert-error">
+      <div class="alert-icon">⚠️</div>
+      <div class="alert-content">{{ error }}</div>
+      <button class="alert-close" (click)="clearMessages()">×</button>
+    </div>
+  
+    <div *ngIf="successMessage" class="alert alert-success">
+      <div class="alert-icon">✓</div>
+      <div class="alert-content">{{ successMessage }}</div>
+      <button class="alert-close" (click)="clearMessages()">×</button>
+    </div>
+  
+    <!-- Loading Indicator -->
+    <div *ngIf="loading" class="loading-container">
+      <div class="loading-spinner"></div>
+      <p>Processing request...</p>
+    </div>
+  
+    <!-- Main Content Area -->
+    <div class="admin-content">
+      <!-- Subjects List -->
+      <div class="subjects-list-container">
+        <div class="subjects-header">
+          <h2>All Subjects</h2>
+          <button class="btn-primary" (click)="startAddSubject()">Add Subject</button>
+        </div>
+  
+        <div *ngIf="subjects.length === 0 && !loading" class="empty-state">
+          <div class="empty-icon">📚</div>
+          <p>No subjects added yet. Get started by adding your first subject.</p>
+        </div>
+  
+        <div class="subjects-list" *ngIf="subjects.length > 0">
+          <div 
+            *ngFor="let subject of subjects" 
+            class="subject-item" 
+            [class.selected]="selectedSubject?.id === subject.id"
+            (click)="selectSubject(subject)"
+          >
+            <div class="subject-icon">{{ subject.icon }}</div>
+            <div class="subject-details">
+              <h3>{{ subject.name }}</h3>
+              <p class="subject-count">{{ subject.subSubjects.length }} sub-topics</p>
+            </div>
+            <div class="subject-actions">
+              <button class="btn-icon edit" (click)="startEditSubject(subject); $event.stopPropagation()">✏️</button>
+              <button class="btn-icon delete" (click)="deleteSubject(subject); $event.stopPropagation()">🗑️</button>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Subject Details -->
+      <div class="subject-details-container">
+        <!-- Add/Edit Subject Form -->
+        <div *ngIf="isAddingSubject || isEditingSubject" class="subject-form-container">
+          <h2>{{ isAddingSubject ? 'Add New Subject' : 'Edit Subject' }}</h2>
+          <form [formGroup]="subjectForm" (ngSubmit)="saveSubject()">
+            <div class="form-group">
+              <label for="name">Subject Name</label>
+              <input 
+                type="text" 
+                id="name" 
+                formControlName="name" 
+                placeholder="e.g., Mathematics"
+                [class.error]="subjectName?.invalid && (subjectName?.dirty || subjectName?.touched)"
+              >
+              <div class="error-feedback" *ngIf="subjectName?.invalid && (subjectName?.dirty || subjectName?.touched)">
+                <div *ngIf="subjectName?.errors?.['required']">Subject name is required</div>
+                <div *ngIf="subjectName?.errors?.['minlength']">Subject name must be at least 3 characters</div>
+              </div>
+            </div>
+  
+            <div class="form-group">
+              <label for="description">Description</label>
+              <textarea 
+                id="description" 
+                formControlName="description" 
+                placeholder="Describe what students will learn in this subject..."
+                rows="4"
+                [class.error]="subjectDescription?.invalid && (subjectDescription?.dirty || subjectDescription?.touched)"
+              ></textarea>
+              <div class="error-feedback" *ngIf="subjectDescription?.invalid && (subjectDescription?.dirty || subjectDescription?.touched)">
+                <div *ngIf="subjectDescription?.errors?.['required']">Description is required</div>
+                <div *ngIf="subjectDescription?.errors?.['minlength']">Description must be at least 10 characters</div>
+              </div>
+            </div>
+  
+            <div class="form-group">
+              <label for="icon">Icon (Emoji)</label>
+              <input 
+                type="text" 
+                id="icon" 
+                formControlName="icon" 
+                placeholder="📚"
+                [class.error]="subjectIcon?.invalid && (subjectIcon?.dirty || subjectIcon?.touched)"
+              >
+              <div class="error-feedback" *ngIf="subjectIcon?.invalid && (subjectIcon?.dirty || subjectIcon?.touched)">
+                <div *ngIf="subjectIcon?.errors?.['required']">Icon is required</div>
+              </div>
+            </div>
+  
+            <div class="form-actions">
+              <button type="button" class="btn-secondary" (click)="cancelSubjectEdit()">Cancel</button>
+              <button 
+                type="submit" 
+                class="btn-primary"
+                [disabled]="subjectForm.invalid || loading"
+              >
+                {{ isAddingSubject ? 'Add Subject' : 'Update Subject' }}
+              </button>
+            </div>
+          </form>
+        </div>
+  
+        <!-- Selected Subject Details View -->
+        <div *ngIf="selectedSubject && !isAddingSubject && !isEditingSubject" class="selected-subject-container">
+          <div class="selected-subject-header">
+            <div class="subject-title">
+              <div class="subject-main-icon">{{ selectedSubject.icon }}</div>
+              <h2>{{ selectedSubject.name }}</h2>
+            </div>
+            <div class="subject-actions">
+              <button class="btn-secondary" (click)="startEditSubject(selectedSubject)">Edit Subject</button>
+            </div>
+          </div>
+  
+          <div class="subject-description">
+            <h3>Description</h3>
+            <p>{{ selectedSubject.description }}</p>
+          </div>
+  
+          <div class="sub-subjects-container">
+            <div class="sub-subjects-header">
+              <h3>Sub-topics</h3>
+              <button class="btn-primary" (click)="startAddSubSubject()">Add Sub-topic</button>
+            </div>
+  
+            <!-- Add Sub-Subject Form -->
+            <div *ngIf="isAddingSubSubject" class="sub-subject-form">
+              <form [formGroup]="subSubjectForm" (ngSubmit)="saveSubSubject()">
+                <div class="form-group">
+                  <label for="subSubjectName">Sub-topic Name</label>
+                  <input 
+                    type="text" 
+                    id="subSubjectName" 
+                    formControlName="name" 
+                    placeholder="e.g., Algebra"
+                    [class.error]="subSubjectName?.invalid && (subSubjectName?.dirty || subSubjectName?.touched)"
+                  >
+                  <div class="error-feedback" *ngIf="subSubjectName?.invalid && (subSubjectName?.dirty || subSubjectName?.touched)">
+                    <div *ngIf="subSubjectName?.errors?.['required']">Sub-topic name is required</div>
+                    <div *ngIf="subSubjectName?.errors?.['minlength']">Sub-topic name must be at least 3 characters</div>
+                  </div>
+                </div>
+  
+                <div class="form-actions">
+                  <button type="button" class="btn-secondary" (click)="cancelSubSubjectAdd()">Cancel</button>
+                  <button 
+                    type="submit" 
+                    class="btn-primary"
+                    [disabled]="subSubjectForm.invalid || loading"
+                  >
+                    Add Sub-topic
+                  </button>
+                </div>
+              </form>
+            </div>
+  
+            <!-- Sub-Subjects List -->
+            <div *ngIf="selectedSubject.subSubjects.length === 0" class="empty-state small">
+              <p>No sub-topics added yet. Add specific topics within this subject area.</p>
+            </div>
+  
+            <div class="sub-subjects-list" *ngIf="selectedSubject.subSubjects.length > 0">
+              <div *ngFor="let subSubject of selectedSubject.subSubjects" class="sub-subject-item">
+                <div class="sub-subject-details">
+                  <h4>{{ subSubject.name }}</h4>
+                </div>
+                <div class="sub-subject-actions">
+                  <button class="btn-icon delete" (click)="deleteSubSubject(subSubject)">🗑️</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Welcome State (no subject selected) -->
+        <div *ngIf="!selectedSubject && !isAddingSubject && !isEditingSubject" class="welcome-container">
+          <div class="welcome-illustration">📚</div>
+          <h2>Manage Academic Subjects</h2>
+          <p>Select a subject from the list to view details or add a new subject to get started.</p>
+          <button class="btn-primary" (click)="startAddSubject()">Add New Subject</button>
+        </div>
+      </div>
+    </div>
+  </div>
