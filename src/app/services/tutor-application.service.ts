@@ -1,7 +1,8 @@
 // src/app/services/tutor-application.service.ts
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, catchError, throwError } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { environment } from '../environments/environment';
 
 export interface TutorApplicationRequest {
@@ -33,9 +34,6 @@ export interface TutorApplication {
   cvFilePath: string;
   status: string;
   submittedAt: Date;
-  reviewedAt?: Date;
-  reviewedBy?: number;
-  reviewNotes?: string;
 }
 
 @Injectable({
@@ -46,39 +44,6 @@ export class TutorApplicationService {
 
   constructor(private http: HttpClient) {}
 
-  /**
-   * Get all tutor applications (admin only)
-   */
-  getAllApplications(): Observable<TutorApplication[]> {
-    return this.http.get<TutorApplication[]>(this.apiUrl)
-      .pipe(
-        catchError(this.handleError)
-      );
-  }
-
-  /**
-   * Get current user's applications
-   */
-  getMyApplications(): Observable<TutorApplication[]> {
-    return this.http.get<TutorApplication[]>(`${this.apiUrl}/my-applications`)
-      .pipe(
-        catchError(this.handleError)
-      );
-  }
-
-  /**
-   * Get application by ID
-   */
-  getApplicationById(id: number): Observable<TutorApplication> {
-    return this.http.get<TutorApplication>(`${this.apiUrl}/${id}`)
-      .pipe(
-        catchError(this.handleError)
-      );
-  }
-
-  /**
-   * Create a new application
-   */
   createApplication(application: TutorApplicationRequest, cvFile: File): Observable<TutorApplication> {
     const formData = new FormData();
     
@@ -86,9 +51,12 @@ export class TutorApplicationService {
     formData.append('profession', application.profession);
     formData.append('education', application.education);
     formData.append('experience', application.experience.toString());
+    
+    // Handle array of subjects
     application.subjects.forEach((subject, index) => {
       formData.append(`subjects[${index}]`, subject);
     });
+    
     formData.append('bio', application.bio);
     formData.append('hourlyRate', application.hourlyRate.toString());
     formData.append('reason', application.reason);
@@ -110,21 +78,6 @@ export class TutorApplicationService {
       );
   }
 
-  /**
-   * Update application status (admin only)
-   */
-  updateApplicationStatus(id: number, status: string, reviewNotes?: string): Observable<TutorApplication> {
-    return this.http.put<TutorApplication>(`${this.apiUrl}/${id}/status`, {
-      status,
-      reviewNotes
-    }).pipe(
-      catchError(this.handleError)
-    );
-  }
-
-  /**
-   * Handle HTTP errors
-   */
   private handleError(error: any): Observable<never> {
     let errorMessage = 'An unknown error occurred';
     

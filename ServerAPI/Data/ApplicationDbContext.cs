@@ -25,7 +25,7 @@ namespace ServerAPI.Data
         //Tutor Application
 
         public DbSet<TutorApplication> TutorApplications { get; set; }
-        public DbSet<TutorApplicationSubject> TutorApplicationSubjects { get; set; }
+public DbSet<TutorApplicationSubject> TutorApplicationSubjects { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -105,12 +105,12 @@ namespace ServerAPI.Data
 
             modelBuilder.Entity<TutorApplication>(entity =>
             {
-                  entity.HasOne(a => a.User)
+                entity.HasOne(a => a.User)
                   .WithMany()
                   .HasForeignKey(a => a.UserId)
                   .OnDelete(DeleteBehavior.Cascade);
-              
-                  entity.HasMany(a => a.Subjects)
+            
+                entity.HasMany(a => a.Subjects)
                   .WithOne(s => s.Application)
                   .HasForeignKey(s => s.ApplicationId)
                   .OnDelete(DeleteBehavior.Cascade);

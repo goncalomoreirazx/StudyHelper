@@ -138,10 +138,13 @@ export class TutorApplicationComponent implements OnInit {
       contactPhone: this.contactPhone?.value || undefined
     };
     
+    console.log('Application data:', this.applicationForm.value);
+    
     // Send to the server
     this.tutorApplicationService.createApplication(applicationData, this.cvFile)
       .subscribe({
         next: (response) => {
+          console.log('Application submitted successfully:', response);
           this.isSubmitting = false;
           this.applicationSubmitted = true;
           
@@ -149,6 +152,7 @@ export class TutorApplicationComponent implements OnInit {
           window.scrollTo({ top: 0, behavior: 'smooth' });
         },
         error: (error) => {
+          console.error('Error submitting application:', error);
           this.isSubmitting = false;
           this.errorMessage = error.message || 'Failed to submit application. Please try again.';
           
@@ -189,7 +193,9 @@ export class TutorApplicationComponent implements OnInit {
       // Set file name for display and store the file
       this.cvFileName = file.name;
       this.cvFile = file;
-      this.cvUpload?.setValue(this.cvFileName);
+      
+      // DO NOT set the value of the file input - this is what causes the error
+      // this.cvUpload?.setValue(this.cvFileName); - REMOVE THIS LINE
     }
   }
   

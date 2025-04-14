@@ -25,81 +25,6 @@ namespace ServerAPI.Controllers
             _logger = logger;
         }
 
-        [HttpGet]
-        [Authorize(Roles = "ADMIN")]
-        public async Task<ActionResult<List<TutorApplicationDto>>> GetAllApplications()
-        {
-            try
-            {
-                var applications = await _tutorApplicationService.GetAllApplicationsAsync();
-                return Ok(applications);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error getting all tutor applications");
-                return StatusCode(500, new { message = "An error occurred while retrieving applications." });
-            }
-        }
-
-        [HttpGet("{id}")]
-        public async Task<ActionResult<TutorApplicationDto>> GetApplicationById(int id)
-        {
-            try
-            {
-                var application = await _tutorApplicationService.GetApplicationByIdAsync(id);
-                if (application == null)
-                {
-                    return NotFound(new { message = $"Application with ID {id} not found." });
-                }
-
-                // Check if user has permission to view this application
-                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-                var userRoleClaim = User.FindFirst(ClaimTypes.Role);
-                if (userIdClaim == null)
-                {
-                    return Unauthorized(new { message = "User not authenticated." });
-                }
-
-                int userId = int.Parse(userIdClaim.Value);
-                string userRole = userRoleClaim?.Value ?? "";
-
-                // Allow access if user is admin or the owner of the application
-                if (userRole != "ADMIN" && application.UserId != userId)
-                {
-                    return Forbid();
-                }
-
-                return Ok(application);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error getting application by ID: {Id}", id);
-                return StatusCode(500, new { message = "An error occurred while retrieving the application." });
-            }
-        }
-
-        [HttpGet("my-applications")]
-        public async Task<ActionResult<List<TutorApplicationDto>>> GetMyApplications()
-        {
-            try
-            {
-                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-                if (userIdClaim == null)
-                {
-                    return Unauthorized(new { message = "User not authenticated." });
-                }
-
-                int userId = int.Parse(userIdClaim.Value);
-                var applications = await _tutorApplicationService.GetApplicationsByUserIdAsync(userId);
-                return Ok(applications);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error getting user's applications");
-                return StatusCode(500, new { message = "An error occurred while retrieving applications." });
-            }
-        }
-
         [HttpPost]
         public async Task<ActionResult<TutorApplicationDto>> CreateApplication([FromForm] TutorApplicationCreateRequest request, IFormFile cvFile)
         {
@@ -153,6 +78,66 @@ namespace ServerAPI.Controllers
             {
                 _logger.LogError(ex, "Error creating tutor application");
                 return StatusCode(500, new { message = "An error occurred while creating the application." });
+            }
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<TutorApplicationDto>> GetApplicationById(int id)
+        {
+            try
+            {
+                var application = await _tutorApplicationService.GetApplicationByIdAsync(id);
+                if (application == null)
+                {
+                    return NotFound(new { message = $"Application with ID {id} not found." });
+                }
+
+                // Check if user has permission to view this application
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+                var userRoleClaim = User.FindFirst(ClaimTypes.Role);
+                if (userIdClaim == null)
+                {
+                    return Unauthorized(new { message = "User not authenticated." });
+                }
+
+                int userId = int.Parse(userIdClaim.Value);
+                string userRole = userRoleClaim?.Value ?? "";
+
+                // Allow access if user is admin or the owner of the application
+                if (userRole != "ADMIN" && application.UserId != userId)
+                {
+                    return Forbid();
+                }
+
+                return Ok(application);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting application by ID: {Id}", id);
+                return StatusCode(500, new { message = "An error occurred while retrieving the application." });
+            }
+        }
+    
+
+        [HttpGet("my-applications")]
+        public async Task<ActionResult<List<TutorApplicationDto>>> GetMyApplications()
+        {
+            try
+            {
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+                if (userIdClaim == null)
+                {
+                    return Unauthorized(new { message = "User not authenticated." });
+                }
+
+                int userId = int.Parse(userIdClaim.Value);
+                var applications = await _tutorApplicationService.GetApplicationsByUserIdAsync(userId);
+                return Ok(applications);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting user's applications");
+                return StatusCode(500, new { message = "An error occurred while retrieving applications." });
             }
         }
 

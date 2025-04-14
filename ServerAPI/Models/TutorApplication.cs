@@ -1,5 +1,4 @@
-using System.Text.Json.Serialization;
-
+// TutorApplication.cs
 namespace ServerAPI.Models
 {
     public class TutorApplication
@@ -17,13 +16,9 @@ namespace ServerAPI.Models
         public string CvFilePath { get; set; } = string.Empty;
         public ApplicationStatus Status { get; set; } = ApplicationStatus.PENDING;
         public DateTime SubmittedAt { get; set; } = DateTime.UtcNow;
-        public DateTime? ReviewedAt { get; set; }
-        public int? ReviewedBy { get; set; }
-        public string? ReviewNotes { get; set; }
         
-        [JsonIgnore]
+        // Navigation properties
         public User User { get; set; } = null!;
-        
         public List<TutorApplicationSubject> Subjects { get; set; } = new List<TutorApplicationSubject>();
     }
 
@@ -33,7 +28,6 @@ namespace ServerAPI.Models
         public int ApplicationId { get; set; }
         public string Subject { get; set; } = string.Empty;
         
-        [JsonIgnore]
         public TutorApplication Application { get; set; } = null!;
     }
     
