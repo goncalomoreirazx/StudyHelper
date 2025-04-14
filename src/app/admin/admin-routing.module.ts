@@ -13,43 +13,34 @@ import { adminAuthGuard } from './guards/admin-auth.guard';
 
 const routes: Routes = [
   {
-    path: 'admin',
+    path: 'login', // This defines the /admin/login route
+    component: AdminLoginComponent
+  },
+  {
+    path: '', // This matches the /admin path after the module is loaded
+    component: AdminLayoutComponent,
+    canActivate: [adminAuthGuard],
     children: [
       {
-        path: 'login',
-        component: AdminLoginComponent
+        path: 'dashboard',
+        component: AdminDashboardComponent
+      },
+      {
+        path: 'users',
+        component: AdminUsersComponent
+      },
+      {
+        path: 'sessions',
+        component: AdminSessionsComponent
+      },
+      {
+        path: 'tutors',
+        component: AdminTutorsComponent
       },
       {
         path: '',
-        component: AdminLayoutComponent,
-        canActivate: [adminAuthGuard],
-        children: [
-          {
-            path: 'dashboard',
-            component: AdminDashboardComponent
-          },
-          {
-            path: 'users',
-            component: AdminUsersComponent
-          },
-          {
-            path: 'sessions',
-            component: AdminSessionsComponent
-          },
-          {
-            path: 'tutors',
-            component: AdminTutorsComponent
-          },
-          {
-            path: 'subjects',
-            //component: AdminSubjectsComponent
-          },
-          {
-            path: '',
-            redirectTo: 'dashboard',
-            pathMatch: 'full'
-          }
-        ]
+        redirectTo: 'dashboard',
+        pathMatch: 'full'
       }
     ]
   }

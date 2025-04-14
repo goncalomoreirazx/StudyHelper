@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import { AdminRoutingModule } from './admin-routing.module';
+// Import the standalone components
 import { AdminLoginComponent } from './components/admin-login/admin-login.component';
 import { AdminDashboardComponent } from './components/admin-dashboard/admin-dashboard.component';
 import { AdminSidebarComponent } from './components/admin-sidebar/admin-sidebar.component';
@@ -16,21 +17,30 @@ import { AdminLayoutComponent } from './components/admin-layout/admin-layout.com
 
 @NgModule({
   declarations: [
-    AdminLoginComponent,
-    AdminDashboardComponent,
-    AdminSidebarComponent,
-    AdminUsersComponent,
-    AdminSessionsComponent,
-    AdminTutorsComponent,
-    AdminUsersComponent,
-    AdminLayoutComponent
+    // Remove the standalone components from declarations
+    // AdminLoginComponent,
+    // AdminDashboardComponent,
+    // AdminSidebarComponent,
+    // AdminUsersComponent,
+    // AdminSessionsComponent,
+    // AdminTutorsComponent,
+    // AdminUsersComponent, // You had this duplicated
+    // AdminLayoutComponent
   ],
   imports: [
     CommonModule,
     RouterModule,
     ReactiveFormsModule,
     FormsModule,
-    AdminRoutingModule
+    AdminRoutingModule,
+    // Optionally import the standalone components if this module uses them in its template
+    // AdminLoginComponent,
+    // AdminDashboardComponent,
+    // AdminSidebarComponent,
+    // AdminUsersComponent,
+    // AdminSessionsComponent,
+    // AdminTutorsComponent,
+    // AdminLayoutComponent
   ]
 })
 export class AdminModule { }

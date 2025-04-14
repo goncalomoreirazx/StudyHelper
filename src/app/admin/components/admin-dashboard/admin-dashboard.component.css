@@ -13,7 +13,7 @@
   /* Dashboard Cards */
   .dashboard-cards {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Improved responsiveness */
     gap: var(--spacing-lg);
     margin-bottom: var(--spacing-xl);
   }
@@ -88,7 +88,7 @@
   /* Dashboard Content */
   .dashboard-content {
     display: grid;
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: 3fr 1fr; /* Adjusted ratio for wider view */
     gap: var(--spacing-lg);
   }
   
@@ -245,7 +245,7 @@
   /* Responsive Styles */
   @media (max-width: 1200px) {
     .dashboard-cards {
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Adjust for smaller screens */
     }
   }
   
@@ -259,7 +259,7 @@
     .dashboard-cards {
       grid-template-columns: 1fr;
     }
-    
+  
     .sessions-table th:nth-child(2),
     .sessions-table td:nth-child(2) {
       display: none;
@@ -270,30 +270,30 @@
     .dashboard-container {
       padding: 0;
     }
-    
+  
     .page-title {
       font-size: 1.25rem;
       margin-bottom: var(--spacing-md);
     }
-    
+  
     .dashboard-card {
       padding: var(--spacing-md);
     }
-    
+  
     .card-value {
       font-size: 1.5rem;
     }
-    
+  
     .sessions-table th,
     .sessions-table td {
       padding: var(--spacing-sm);
     }
-    
+  
     .sessions-table th:nth-child(3),
     .sessions-table td:nth-child(3) {
       display: none;
     }
-    
+  
     .quick-actions {
       grid-template-columns: 1fr;
     }

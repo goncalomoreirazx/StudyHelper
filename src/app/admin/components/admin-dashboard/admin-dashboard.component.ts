@@ -1,5 +1,7 @@
 // src/app/admin/components/admin-dashboard/admin-dashboard.component.ts
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common'; // Import CommonModule
+import { RouterModule } from '@angular/router'; // Import RouterModule
 
 interface DashboardCard {
   title: string;
@@ -21,6 +23,8 @@ interface RecentSession {
 
 @Component({
   selector: 'app-admin-dashboard',
+  standalone: true, // Mark as standalone
+  imports: [CommonModule, RouterModule], // Import required modules
   templateUrl: './admin-dashboard.component.html',
   styleUrls: ['./admin-dashboard.component.css']
 })
@@ -56,7 +60,7 @@ export class AdminDashboardComponent implements OnInit {
       route: '/admin/subjects'
     }
   ];
-  
+
   // Sample data for recent sessions
   recentSessions: RecentSession[] = [
     {
@@ -105,13 +109,13 @@ export class AdminDashboardComponent implements OnInit {
       status: 'NO_SHOW'
     }
   ];
-  
+
   constructor() {}
-  
+
   ngOnInit(): void {
     // In a real application, you would fetch this data from a service
   }
-  
+
   getStatusClass(status: string): string {
     switch (status) {
       case 'SCHEDULED': return 'status-scheduled';

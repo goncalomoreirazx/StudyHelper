@@ -10,6 +10,15 @@ import { environment } from '../environments/environment';
   providedIn: 'root'
 })
 export class SubjectService {
+  deleteSubject(id: number) {
+    throw new Error('Method not implemented.');
+  }
+  updateSubject(id: number, arg1: { name: any; description: any; icon: any; }) {
+    throw new Error('Method not implemented.');
+  }
+  createSubject(arg0: { name: any; description: any; icon: any; subSubjects: never[]; }) {
+    throw new Error('Method not implemented.');
+  }
   private readonly apiUrl = `${environment.apiUrl}/subjects`;
 
   constructor(private http: HttpClient) {}
