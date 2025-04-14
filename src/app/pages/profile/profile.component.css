@@ -300,3 +300,45 @@
       gap: var(--spacing-xs);
     }
   }
+
+/* Tutor Upgrade Button */
+.btn-tutor-upgrade {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  background-color: var(--primary-600);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  font-size: 0.875rem;
+  cursor: pointer;
+  margin-top: var(--spacing-sm);
+  transition: all 0.3s ease;
+  text-decoration: none;
+  margin-left: 1rem;
+}
+
+.btn-tutor-upgrade:hover {
+  background-color: var(--primary-700);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.upgrade-icon {
+  font-size: 1.125rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+  .profile-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .btn-tutor-upgrade {
+    margin-top: var(--spacing-md);
+  }
+}

@@ -1,0 +1,248 @@
+<!-- src/app/pages/tutor-application/tutor-application.component.html -->
+<main class="tutor-application-page">
+    <div class="container">
+      <!-- Loading State -->
+      <div *ngIf="isLoading" class="loading-container">
+        <div class="loading-spinner"></div>
+        <p>Loading application form...</p>
+      </div>
+  
+      <!-- Success Message after submission -->
+      <div *ngIf="applicationSubmitted" class="success-message">
+        <div class="success-icon">✓</div>
+        <h2>Application Submitted Successfully!</h2>
+        <p>Thank you for applying to become a tutor. Our team will review your application and contact you soon.</p>
+        <div class="success-actions">
+          <a routerLink="/profile" class="btn-primary">Return to Profile</a>
+        </div>
+      </div>
+  
+      <!-- Application Form -->
+      <div *ngIf="!isLoading && !applicationSubmitted && currentUser" class="application-content">
+        <div class="application-header">
+          <h1>Tutor Application</h1>
+          <p>Complete the form below to apply to become a tutor on our platform.</p>
+        </div>
+  
+        <!-- Error Message -->
+        <div *ngIf="errorMessage" class="error-message">
+          <span class="error-icon">!</span>
+          <p>{{ errorMessage }}</p>
+        </div>
+  
+        <form [formGroup]="applicationForm" (ngSubmit)="onSubmit()" class="application-form">
+          <!-- Professional Information Section -->
+          <div class="form-section">
+            <h2>Professional Information</h2>
+            
+            <!-- Profession Field -->
+            <div class="form-group">
+              <label for="profession">Current Profession/Title <span class="required">*</span></label>
+              <input 
+                type="text" 
+                id="profession" 
+                formControlName="profession" 
+                placeholder="e.g., Mathematics Teacher, Software Engineer, Graduate Student"
+                [class.error]="profession?.invalid && (profession?.dirty || profession?.touched)"
+              >
+              <div class="error-feedback" *ngIf="profession?.invalid && (profession?.dirty || profession?.touched)">
+                <div *ngIf="profession?.errors?.['required']">Profession is required</div>
+              </div>
+            </div>
+  
+            <!-- Education Field -->
+            <div class="form-group">
+              <label for="education">Education/Qualifications <span class="required">*</span></label>
+              <textarea 
+                id="education" 
+                formControlName="education" 
+                placeholder="List your degrees, certifications, and relevant qualifications"
+                rows="3"
+                [class.error]="education?.invalid && (education?.dirty || education?.touched)"
+              ></textarea>
+              <div class="error-feedback" *ngIf="education?.invalid && (education?.dirty || education?.touched)">
+                <div *ngIf="education?.errors?.['required']">Education information is required</div>
+              </div>
+            </div>
+  
+            <!-- Teaching Experience Field -->
+            <div class="form-group">
+              <label for="experience">Years of Teaching/Tutoring Experience <span class="required">*</span></label>
+              <input 
+                type="number" 
+                id="experience" 
+                formControlName="experience" 
+                min="0"
+                [class.error]="experience?.invalid && (experience?.dirty || experience?.touched)"
+              >
+              <div class="error-feedback" *ngIf="experience?.invalid && (experience?.dirty || experience?.touched)">
+                <div *ngIf="experience?.errors?.['required']">Experience is required</div>
+                <div *ngIf="experience?.errors?.['min']">Experience cannot be negative</div>
+              </div>
+            </div>
+  
+            <!-- Subjects Field -->
+            <div class="form-group">
+              <label>Subjects You Can Teach <span class="required">*</span></label>
+              <div class="subjects-container">
+                <div 
+                  *ngFor="let subject of subjectOptions" 
+                  class="subject-checkbox" 
+                  [class.selected]="isSubjectSelected(subject.value)"
+                  (click)="toggleSubjectSelection(subject.value)"
+                >
+                  <span class="checkbox-icon">{{ isSubjectSelected(subject.value) ? '✓' : '' }}</span>
+                  <span class="checkbox-label">{{ subject.label }}</span>
+                </div>
+              </div>
+              <div class="error-feedback" *ngIf="subjects?.invalid && (subjects?.dirty || subjects?.touched)">
+                <div *ngIf="subjects?.errors?.['required'] || subjects?.errors?.['minLength']">
+                  Please select at least one subject
+                </div>
+              </div>
+            </div>
+  
+            <!-- Bio Field -->
+            <div class="form-group">
+              <label for="bio">Professional Bio <span class="required">*</span></label>
+              <textarea 
+                id="bio" 
+                formControlName="bio" 
+                placeholder="Write a brief professional bio that will be displayed on your tutor profile (100-500 characters)"
+                rows="5"
+                [class.error]="bio?.invalid && (bio?.dirty || bio?.touched)"
+              ></textarea>
+              <div class="character-count" [class.error]="bio?.invalid && bio?.value">
+                {{ bio?.value?.length || 0 }}/500 characters
+              </div>
+              <div class="error-feedback" *ngIf="bio?.invalid && (bio?.dirty || bio?.touched)">
+                <div *ngIf="bio?.errors?.['required']">Bio is required</div>
+                <div *ngIf="bio?.errors?.['minlength']">Bio must be at least 100 characters</div>
+                <div *ngIf="bio?.errors?.['maxlength']">Bio cannot exceed 500 characters</div>
+              </div>
+            </div>
+  
+            <!-- Hourly Rate Field -->
+            <div class="form-group">
+              <label for="hourlyRate">Preferred Hourly Rate ($) <span class="required">*</span></label>
+              <input 
+                type="number" 
+                id="hourlyRate" 
+                formControlName="hourlyRate" 
+                min="10" 
+                max="200"
+                [class.error]="hourlyRate?.invalid && (hourlyRate?.dirty || hourlyRate?.touched)"
+              >
+              <div class="rate-hint">Our tutors typically charge between $10-$200 per hour depending on experience and subject</div>
+              <div class="error-feedback" *ngIf="hourlyRate?.invalid && (hourlyRate?.dirty || hourlyRate?.touched)">
+                <div *ngIf="hourlyRate?.errors?.['required']">Hourly rate is required</div>
+                <div *ngIf="hourlyRate?.errors?.['min']">Minimum hourly rate is $10</div>
+                <div *ngIf="hourlyRate?.errors?.['max']">Maximum hourly rate is $200</div>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Additional Information Section -->
+          <div class="form-section">
+            <h2>Additional Information</h2>
+  
+            <!-- Reason Field -->
+            <div class="form-group">
+              <label for="reason">Why do you want to become a tutor? <span class="required">*</span></label>
+              <textarea 
+                id="reason" 
+                formControlName="reason" 
+                placeholder="Tell us why you want to join our tutoring platform (50-300 characters)"
+                rows="4"
+                [class.error]="reason?.invalid && (reason?.dirty || reason?.touched)"
+              ></textarea>
+              <div class="character-count" [class.error]="reason?.invalid && reason?.value">
+                {{ reason?.value?.length || 0 }}/300 characters
+              </div>
+              <div class="error-feedback" *ngIf="reason?.invalid && (reason?.dirty || reason?.touched)">
+                <div *ngIf="reason?.errors?.['required']">This field is required</div>
+                <div *ngIf="reason?.errors?.['minlength']">Please write at least 50 characters</div>
+                <div *ngIf="reason?.errors?.['maxlength']">Cannot exceed 300 characters</div>
+              </div>
+            </div>
+  
+            <!-- Additional Info Field -->
+            <div class="form-group">
+              <label for="additionalInfo">Additional Information (Optional)</label>
+              <textarea 
+                id="additionalInfo" 
+                formControlName="additionalInfo" 
+                placeholder="Any other information you'd like to share with our review team"
+                rows="3"
+              ></textarea>
+            </div>
+  
+            <!-- Contact Phone Field -->
+            <div class="form-group">
+              <label for="contactPhone">Contact Phone Number (Optional)</label>
+              <input 
+                type="tel" 
+                id="contactPhone" 
+                formControlName="contactPhone" 
+                placeholder="e.g., (555) 123-4567"
+                [class.error]="contactPhone?.invalid && (contactPhone?.dirty || contactPhone?.touched)"
+              >
+              <div class="error-feedback" *ngIf="contactPhone?.invalid && (contactPhone?.dirty || contactPhone?.touched)">
+                <div *ngIf="contactPhone?.errors?.['pattern']">Please enter a valid phone number</div>
+              </div>
+            </div>
+            
+            <!-- CV Upload Field -->
+            <div class="form-group">
+              <label for="cvUpload">Upload CV/Resume <span class="required">*</span></label>
+              <div class="file-upload-container">
+                <input 
+                  type="file" 
+                  id="cvUpload" 
+                  formControlName="cvUpload"
+                  accept=".pdf,.doc,.docx"
+                  (change)="onFileChange($event)"
+                  [class.error]="cvUpload?.invalid && (cvUpload?.dirty || cvUpload?.touched)"
+                >
+                <div class="file-upload-button">
+                  <span class="upload-icon">📄</span>
+                  <span class="upload-text">{{ cvFileName || 'Select your CV/Resume file' }}</span>
+                </div>
+              </div>
+              <div class="file-format-hint">Accepted formats: PDF, DOC, DOCX (Max 5MB)</div>
+              <div class="error-feedback" *ngIf="cvUpload?.invalid && (cvUpload?.dirty || cvUpload?.touched)">
+                <div *ngIf="cvUpload?.errors?.['required']">CV/Resume is required</div>
+                <div *ngIf="fileError">{{ fileError }}</div>
+              </div>
+            </div>
+  
+            <!-- Terms Checkbox -->
+            <div class="form-group">
+              <div class="terms-container">
+                <input type="checkbox" id="agreeTerms" formControlName="agreeTerms">
+                <label for="agreeTerms" class="terms-label">
+                  I confirm that all information provided is accurate and I agree to the <a href="/terms" target="_blank">Tutor Terms & Conditions</a> <span class="required">*</span>
+                </label>
+              </div>
+              <div class="error-feedback" *ngIf="agreeTerms?.invalid && (agreeTerms?.dirty || agreeTerms?.touched)">
+                <div *ngIf="agreeTerms?.errors?.['required']">You must agree to the terms and conditions</div>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Form Submission -->
+          <div class="form-actions">
+            <button type="button" routerLink="/profile" class="btn-secondary">Cancel</button>
+            <button 
+              type="submit" 
+              class="btn-primary" 
+              [disabled]="isSubmitting || applicationForm.invalid"
+            >
+              <span *ngIf="isSubmitting" class="spinner"></span>
+              <span>{{ isSubmitting ? 'Submitting...' : 'Submit Application' }}</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>

@@ -44,6 +44,11 @@ export const routes: Routes = [
         canActivate: [authGuard]
     },
     {
+        path: 'tutor-application',
+        loadComponent: () => import('./pages/tutor-application/tutor-application.component').then(m => m.TutorApplicationComponent),
+        canActivate: [authGuard]
+    },
+    {
         path: 'my-sessions',
         loadComponent: () => import('./pages/my-sessions/my-sessions.component').then(m => m.MySessionsComponent),
         canActivate: [authGuard]

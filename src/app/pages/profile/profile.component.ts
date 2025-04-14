@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { User } from '../../models/user.model';
+import { User, UserRole } from '../../models/user.model';
 
 @Component({
   selector: 'app-profile',
@@ -15,6 +15,7 @@ import { User } from '../../models/user.model';
 export class ProfileComponent implements OnInit {
   currentUser: User | null = null;
   isLoading = true;
+  isStudent = false; // Flag to check if user is a student
   
   constructor(private authService: AuthService) {}
   
@@ -22,6 +23,9 @@ export class ProfileComponent implements OnInit {
     this.authService.currentUser$.subscribe(user => {
       this.currentUser = user;
       this.isLoading = false;
+      
+      // Check if user is a student
+      this.isStudent = user?.role === UserRole.STUDENT;
     });
   }
 }
