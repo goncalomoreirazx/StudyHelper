@@ -1,12 +1,15 @@
 
 /* src/app/admin/components/admin-layout/admin-layout.component.css */
+/* src/app/admin/components/admin-layout/admin-layout.component.css */
 .admin-layout {
   display: flex;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
+  width: 100%;
+  height: 100vh;
   overflow: hidden;
   background-color: var(--neutral-100);
 }
@@ -81,8 +84,6 @@
   height: 30px;
   border-radius: var(--radius-sm);
   transition: background-color 0.3s ease;
-  aria-label: "Toggle sidebar";
-  aria-expanded: false; /* Update this dynamically with JS */
 }
 
 .toggle-sidebar:hover {
@@ -101,7 +102,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-md);
-  flex-shrink: 0; /* Important: Don't let the footer shrink */
+  flex-shrink: 0;
 }
 
 .admin-info {
@@ -170,22 +171,64 @@
 
 /* Main Content */
 .admin-content {
-  flex: 1 0 auto;
+  flex: 1;
   overflow: hidden;
   display: flex;
   flex-direction: column;
 }
 
-/* Remove the header */
 .admin-header {
+  height: 60px;
+  padding: 0 var(--spacing-lg);
+  background-color: white;
+  border-bottom: 1px solid var(--neutral-200);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  z-index: 5;
+  flex-shrink: 0;
+}
+
+.mobile-toggle {
   display: none;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--neutral-700);
+}
+
+.page-title h1 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--neutral-800);
+  margin: 0;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.admin-avatar-mobile {
+  display: none;
+  width: 36px;
+  height: 36px;
+  background-color: var(--primary-700);
+  color: white;
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.875rem;
 }
 
 .content-wrapper {
   flex: 1;
   overflow-y: auto;
-  padding: var(--spacing-lg); /* Or adjust as needed */
-  padding-top: 0; /* Remove top padding if desired */
+  padding: var(--spacing-lg);
 }
 
 /* Responsive styles */
@@ -212,10 +255,8 @@
     display: flex;
   }
 
-  .toggle-sidebar {
-    position: absolute;
-    top: 10px;
-    right: 10px;
+  .admin-header {
+    display: flex;
   }
 }
 
