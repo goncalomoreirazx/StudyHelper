@@ -22,6 +22,11 @@ namespace ServerAPI.Data
         public DbSet<TutorSession> TutorSessions { get; set; }
         public DbSet<TutorAvailability> TutorAvailabilities { get; set; }
 
+        //Tutor Application
+
+        public DbSet<TutorApplication> TutorApplications { get; set; }
+        public DbSet<TutorApplicationSubject> TutorApplicationSubjects { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -96,6 +101,19 @@ namespace ServerAPI.Data
                       .WithMany()
                       .HasForeignKey(ts => ts.SubSubjectId)
                       .OnDelete(DeleteBehavior.Restrict); // Don't delete sessions if sub-subject is deleted
+            });
+
+            modelBuilder.Entity<TutorApplication>(entity =>
+            {
+                  entity.HasOne(a => a.User)
+                  .WithMany()
+                  .HasForeignKey(a => a.UserId)
+                  .OnDelete(DeleteBehavior.Cascade);
+              
+                  entity.HasMany(a => a.Subjects)
+                  .WithOne(s => s.Application)
+                  .HasForeignKey(s => s.ApplicationId)
+                  .OnDelete(DeleteBehavior.Cascade);
             });
         }
     }

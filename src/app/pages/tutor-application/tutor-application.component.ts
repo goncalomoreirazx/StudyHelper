@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
+import { TutorApplicationService, TutorApplicationRequest } from '../../services/tutor-application.service';
 import { User } from '../../models/user.model';
 
 @Component({
@@ -22,6 +23,7 @@ export class TutorApplicationComponent implements OnInit {
   errorMessage = '';
   cvFileName: string = '';
   fileError: string = '';
+  cvFile: File | null = null;
   
   // Available subject options for multiselect
   subjectOptions = [
@@ -43,6 +45,7 @@ export class TutorApplicationComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
+    private tutorApplicationService: TutorApplicationService,
     private router: Router
   ) {
     this.applicationForm = this.fb.group({
@@ -107,8 +110,14 @@ export class TutorApplicationComponent implements OnInit {
   
   // Form submission
   onSubmit(): void {
-    if (this.applicationForm.invalid) {
+    if (this.applicationForm.invalid || !this.cvFile) {
       this.applicationForm.markAllAsTouched();
+      
+      if (!this.cvFile) {
+        this.fileError = 'CV file is required';
+        this.cvUpload?.setErrors({ 'required': true });
+      }
+      
       this.scrollToFirstError();
       return;
     }
@@ -116,18 +125,37 @@ export class TutorApplicationComponent implements OnInit {
     this.isSubmitting = true;
     this.errorMessage = '';
     
-    // Placeholder for API call that would submit the application
-    setTimeout(() => {
-      this.isSubmitting = false;
-      this.applicationSubmitted = true;
-      
-      // In a real app, you would call a service here to submit the data
-      // For now we just simulate a successful submission
-      console.log('Application data:', this.applicationForm.value);
-      
-      // Scroll to top to show success message
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, 1500);
+    // Prepare application data
+    const applicationData: TutorApplicationRequest = {
+      profession: this.profession?.value,
+      education: this.education?.value,
+      experience: parseInt(this.experience?.value),
+      subjects: this.subjects?.value,
+      bio: this.bio?.value,
+      hourlyRate: parseFloat(this.hourlyRate?.value),
+      reason: this.reason?.value,
+      additionalInfo: this.additionalInfo?.value || undefined,
+      contactPhone: this.contactPhone?.value || undefined
+    };
+    
+    // Send to the server
+    this.tutorApplicationService.createApplication(applicationData, this.cvFile)
+      .subscribe({
+        next: (response) => {
+          this.isSubmitting = false;
+          this.applicationSubmitted = true;
+          
+          // Scroll to top to show success message
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        },
+        error: (error) => {
+          this.isSubmitting = false;
+          this.errorMessage = error.message || 'Failed to submit application. Please try again.';
+          
+          // Scroll to the top to show the error message
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      });
   }
   
   // Handle file change event
@@ -144,6 +172,7 @@ export class TutorApplicationComponent implements OnInit {
         this.fileError = 'Invalid file type. Please upload a PDF or Word document.';
         this.cvUpload?.setErrors({ 'invalidType': true });
         this.cvFileName = '';
+        this.cvFile = null;
         return;
       }
       
@@ -153,12 +182,14 @@ export class TutorApplicationComponent implements OnInit {
         this.fileError = 'File is too large. Maximum size is 5MB.';
         this.cvUpload?.setErrors({ 'maxSize': true });
         this.cvFileName = '';
+        this.cvFile = null;
         return;
       }
       
-      // Set file name for display
+      // Set file name for display and store the file
       this.cvFileName = file.name;
-      this.cvUpload?.setValue(file);
+      this.cvFile = file;
+      this.cvUpload?.setValue(this.cvFileName);
     }
   }
   
